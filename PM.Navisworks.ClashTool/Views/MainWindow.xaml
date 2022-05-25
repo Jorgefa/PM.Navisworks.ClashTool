@@ -14,14 +14,15 @@
     mc:Ignorable="d">
     <Grid Margin="15">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="20" />
-            <RowDefinition Height="35" />
         </Grid.RowDefinitions>
-        <TextBox Text="Hello!!" />
+        <StackPanel>
+            <TextBox Text="Hello!!" />
+            <Button Command="{Binding TestButtonCommand}" Content="Play" />
+        </StackPanel>
     </Grid>
 </Window>

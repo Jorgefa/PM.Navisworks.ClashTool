@@ -1,9 +1,6 @@
 ﻿using Autodesk.Navisworks.Api;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using PM.Navisworks.ClashTool.Commands;
+using System.Windows.Forms;
 
 namespace PM.Navisworks.ClashTool.ViewModels
 {
@@ -12,6 +9,8 @@ namespace PM.Navisworks.ClashTool.ViewModels
         public MainWindowViewModel(Document document)
         {
             _document = document;
+
+            TestButtonCommand = new DelegateCommand(TestButton);
         }
 
         private readonly Document _document;
@@ -24,8 +23,11 @@ namespace PM.Navisworks.ClashTool.ViewModels
             set { myVar = value; }
         }
 
-       
+        public DelegateCommand TestButtonCommand { get; }
 
-
+        private void TestButton()
+        {
+            MessageBox.Show("Hello");
+        }
     }
 }
