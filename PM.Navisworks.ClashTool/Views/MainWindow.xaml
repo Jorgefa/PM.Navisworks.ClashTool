@@ -1,0 +1,27 @@
+﻿<Window
+    x:Class="PM.Navisworks.ClashTool.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:PM.Navisworks.ClashTool.ViewModels"
+    Title="Navisworks Clash Tool"
+    Width="900"
+    Height="720"
+    d:DataContext="{d:DesignInstance Type=viewModels:MainWindowViewModel,
+                                     IsDesignTimeCreatable=True}"
+    Icon="/PM.Navisworks.ClashTool.PMJF;component/Resources/PM.ico"
+    mc:Ignorable="d">
+    <Grid Margin="15">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="35" />
+        </Grid.RowDefinitions>
+        <TextBox Text="Hello!!" />
+    </Grid>
+</Window>
