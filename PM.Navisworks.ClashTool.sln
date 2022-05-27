@@ -3,9 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.32510.428
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PM.Navisworks.ClashTool", "PM.Navisworks.ClashTool\PM.Navisworks.ClashTool.csproj", "{FED0AED8-306E-4A26-A223-B4B357298577}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassLibrary1", "ClassLibrary1\ClassLibrary1.csproj", "{8A08523E-CE76-4C73-A3BC-49284235923F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PM.Navisworks.ClashTools", "PM.Navisworks.ClashTools\PM.Navisworks.ClashTools.csproj", "{CFA9E7B3-DBA8-493E-8666-956647BE5418}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,22 +13,14 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{FED0AED8-306E-4A26-A223-B4B357298577}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FED0AED8-306E-4A26-A223-B4B357298577}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FED0AED8-306E-4A26-A223-B4B357298577}.Debug|x64.ActiveCfg = Debug|x64
-		{FED0AED8-306E-4A26-A223-B4B357298577}.Debug|x64.Build.0 = Debug|x64
-		{FED0AED8-306E-4A26-A223-B4B357298577}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FED0AED8-306E-4A26-A223-B4B357298577}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FED0AED8-306E-4A26-A223-B4B357298577}.Release|x64.ActiveCfg = Release|x64
-		{FED0AED8-306E-4A26-A223-B4B357298577}.Release|x64.Build.0 = Release|x64
-		{8A08523E-CE76-4C73-A3BC-49284235923F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8A08523E-CE76-4C73-A3BC-49284235923F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8A08523E-CE76-4C73-A3BC-49284235923F}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{8A08523E-CE76-4C73-A3BC-49284235923F}.Debug|x64.Build.0 = Debug|Any CPU
-		{8A08523E-CE76-4C73-A3BC-49284235923F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8A08523E-CE76-4C73-A3BC-49284235923F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8A08523E-CE76-4C73-A3BC-49284235923F}.Release|x64.ActiveCfg = Release|Any CPU
-		{8A08523E-CE76-4C73-A3BC-49284235923F}.Release|x64.Build.0 = Release|Any CPU
+		{CFA9E7B3-DBA8-493E-8666-956647BE5418}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFA9E7B3-DBA8-493E-8666-956647BE5418}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFA9E7B3-DBA8-493E-8666-956647BE5418}.Debug|x64.ActiveCfg = Debug|x64
+		{CFA9E7B3-DBA8-493E-8666-956647BE5418}.Debug|x64.Build.0 = Debug|x64
+		{CFA9E7B3-DBA8-493E-8666-956647BE5418}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFA9E7B3-DBA8-493E-8666-956647BE5418}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFA9E7B3-DBA8-493E-8666-956647BE5418}.Release|x64.ActiveCfg = Release|Any CPU
+		{CFA9E7B3-DBA8-493E-8666-956647BE5418}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

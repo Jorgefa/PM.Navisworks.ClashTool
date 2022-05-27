@@ -1,0 +1,32 @@
+﻿<Window
+    x:Class="PM.Navisworks.ClashTools.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:PM.Navisworks.ClashTools.ViewModels"
+    Title="Navisworks Clash Tool"
+    Width="900"
+    Height="720"
+    d:DataContext="{d:DesignInstance Type=viewModels:MainWindowViewModel,
+                                     IsDesignTimeCreatable=True}"
+    Icon="../Resources/PM.ico"
+    mc:Ignorable="d">
+    <Grid Margin="15">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel>
+            <TextBox Text="Hello!!" />
+            <Button Command="{Binding TestButtonCommand}" Content="Play" />
+        </StackPanel>
+        <DataGrid
+            Grid.Row="1"
+            AutoGenerateColumns="True"
+            ItemsSource="{Binding Configuration.ClashTestsMatrix, Mode=TwoWay}" />
+    </Grid>
+</Window>

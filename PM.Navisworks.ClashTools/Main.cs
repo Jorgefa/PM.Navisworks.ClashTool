@@ -1,9 +1,9 @@
 ﻿using Autodesk.Navisworks.Api.Plugins;
-using PM.Navisworks.ClashTool.Views;
+using PM.Navisworks.ClashTools.Views;
 using System;
 using System.Windows.Forms.Integration;
 
-namespace PM.Navisworks.ClashTool
+namespace PM.Navisworks.ClashTools
 {
     [Plugin("PM.Navisworks.ClashTool",
         "PMJF",

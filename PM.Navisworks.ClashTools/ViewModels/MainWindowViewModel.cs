@@ -1,9 +1,9 @@
 ﻿using Autodesk.Navisworks.Api;
-using PM.Navisworks.ClashTool.Commands;
-using PM.Navisworks.ClashTool.Models;
+using PM.Navisworks.ClashTools.Commands;
+using PM.Navisworks.ClashTools.Models;
 using PM.Navisworks.DataExtraction.Utilities;
 
-namespace PM.Navisworks.ClashTool.ViewModels
+namespace PM.Navisworks.ClashTools.ViewModels
 {
     public class MainWindowViewModel : BindableBase
     {
