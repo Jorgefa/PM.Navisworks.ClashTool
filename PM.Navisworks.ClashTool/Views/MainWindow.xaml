@@ -18,11 +18,15 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="20" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel>
             <TextBox Text="Hello!!" />
             <Button Command="{Binding TestButtonCommand}" Content="Play" />
         </StackPanel>
+        <DataGrid
+            Grid.Row="1"
+            AutoGenerateColumns="True"
+            ItemsSource="{Binding Configuration.ClashTestsMatrix, Mode=TwoWay}" />
     </Grid>
 </Window>

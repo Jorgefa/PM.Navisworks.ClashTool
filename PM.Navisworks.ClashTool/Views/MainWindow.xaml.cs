@@ -25,5 +25,6 @@ namespace PM.Navisworks.ClashTool.Views
             DataContext = new MainWindowViewModel(activeDoc);
             InitializeComponent();
         }
+        
     }
 }
