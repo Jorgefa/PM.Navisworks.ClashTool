@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "PM.Navisworks.ClashTool": {
+    "PM.Navisworks.ClashTools": {
       "commandName": "Executable",
       "executablePath": "C:\\Program Files\\Autodesk\\Navisworks Manage 2022\\Roamer.exe"
     }

@@ -10,7 +10,7 @@
     Height="720"
     d:DataContext="{d:DesignInstance Type=viewModels:MainWindowViewModel,
                                      IsDesignTimeCreatable=True}"
-    Icon="/PM.Navisworks.ClashTool.PMJF;component/Resources/PM.ico"
+    Icon="../Resources/PM.ico"
     mc:Ignorable="d">
     <Grid Margin="15">
         <Grid.ColumnDefinitions>
