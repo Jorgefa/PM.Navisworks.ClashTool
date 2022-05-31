@@ -16,19 +16,19 @@
 	</ItemGroup>
 	<ItemGroup>
 		<Reference Include="Autodesk.Navisworks.Api">
-			<HintPath>C:\Program Files\Autodesk\Navisworks Manage 2022\Autodesk.Navisworks.Api.dll</HintPath>
+			<HintPath>..\ApiDlls\2022_dll\Autodesk.Navisworks.Api.dll</HintPath>
 			<Private>false</Private>
 		</Reference>
 		<Reference Include="Autodesk.Navisworks.Clash">
-			<HintPath>C:\Program Files\Autodesk\Navisworks Manage 2022\Autodesk.Navisworks.Clash.dll</HintPath>
+			<HintPath>..\ApiDlls\2022_dll\Autodesk.Navisworks.Clash.dll</HintPath>
 			<Private>false</Private>
 		</Reference>
 		<Reference Include="Autodesk.Navisworks.ComApi">
-			<HintPath>C:\Program Files\Autodesk\Navisworks Manage 2022\Autodesk.Navisworks.ComApi.dll</HintPath>
+			<HintPath>..\ApiDlls\2022_dll\Autodesk.Navisworks.ComApi.dll</HintPath>
 			<Private>false</Private>
 		</Reference>
 		<Reference Include="Autodesk.Navisworks.Interop.ComApi">
-			<HintPath>C:\Program Files\Autodesk\Navisworks Manage 2022\Autodesk.Navisworks.Interop.ComApi.dll</HintPath>
+			<HintPath>..\ApiDlls\2022_dll\Autodesk.Navisworks.Interop.ComApi.dll</HintPath>
 			<Private>false</Private>
 		</Reference>
 	</ItemGroup>
