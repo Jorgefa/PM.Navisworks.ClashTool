@@ -2,7 +2,7 @@
 using PM.Navisworks.ZoneTool.Commands;
 using PM.Navisworks.ZoneTool.Extensions;
 using PM.Navisworks.ZoneTool.Models;
-using PM.Navisworks.DataExtraction.Utilities;
+using PM.Navisworks.ZoneTool.Utilities;
 using System.Windows;
 
 namespace PM.Navisworks.ZoneTool.ViewModels
@@ -16,7 +16,7 @@ namespace PM.Navisworks.ZoneTool.ViewModels
             _configuration.ZoneCategory = "Element";
             _configuration.ZoneProperty = "ZoneNumber";
 
-            TestButtonCommand = new DelegateCommand(TestButton);
+            AddZoneDataCommand = new DelegateCommand(AddZoneData);
             SelectElementsCommand = new DelegateCommand(SelectElements);
             SelectZonesCommand = new DelegateCommand(SelectZones);
             GetElementsCommand = new DelegateCommand(GetElements);
@@ -57,9 +57,9 @@ namespace PM.Navisworks.ZoneTool.ViewModels
             set { SetProperty(ref _zoneParameter, value); }
         }
 
-        public DelegateCommand TestButtonCommand { get; }
+        public DelegateCommand AddZoneDataCommand { get; }
 
-        private void TestButton()
+        private void AddZoneData()
         {
             if (_zones == null || _elements == null || Configuration.ZoneCategory == null || Configuration.ZoneProperty == null)
             {
@@ -82,7 +82,7 @@ namespace PM.Navisworks.ZoneTool.ViewModels
             }
             _elements.Clear();
             _elements.AddRange(_document.CurrentSelection.SelectedItems);
-            MessageBox.Show(_elements.Count.ToString() + "elements have been selected.");
+            MessageBox.Show(_elements.Count.ToString() + " elements have been selected.");
         }
 
         public DelegateCommand SelectZonesCommand { get; }
@@ -99,7 +99,7 @@ namespace PM.Navisworks.ZoneTool.ViewModels
             }
             _zones.Clear();
             _zones.AddRange(_document.CurrentSelection.SelectedItems);
-            MessageBox.Show(_zones.Count.ToString() + "zones have been selected.");
+            MessageBox.Show(_zones.Count.ToString() + " zones have been selected.");
         }
 
         public DelegateCommand GetElementsCommand { get; }

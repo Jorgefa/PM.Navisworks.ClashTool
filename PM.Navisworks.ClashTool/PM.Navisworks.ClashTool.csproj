@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net47</TargetFramework>
 		<Nullable>disable</Nullable>
-		<Configurations>Debug;Release</Configurations>
+		<Configurations>Debug;Release;Debug_2020;Debug_2021;Debug_2022;Release_2020;Release_2021;Release_2022</Configurations>
 		<Platforms>x64</Platforms>
 		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 		<GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>

@@ -1,36 +1,84 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net47</TargetFramework>
 		<Nullable>disable</Nullable>
-		<Configurations>Debug;Release</Configurations>
+		<Configurations>Debug;Release;Debug_2020;Debug_2021;Debug_2022;Release_2020;Release_2021;Release_2022</Configurations>
 		<Platforms>x64</Platforms>
 		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 		<GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
 		<AssemblyName>PM.Navisworks.ZoneTool.PMJF</AssemblyName>
 	</PropertyGroup>
+	
+    <PropertyGroup Condition="'$(Configuration)' == 'Debug_2020' Or '$(Configuration)' == 'Release_2020'">
+        <TargetFramework>net47</TargetFramework>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)' == 'Debug_2021' Or '$(Configuration)' == 'Release_2021'">
+        <TargetFramework>net47</TargetFramework>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)' == 'Debug_2022' Or '$(Configuration)' == 'Release_2022'">
+        <TargetFramework>net47</TargetFramework>
+    </PropertyGroup>
+
+	<ItemGroup Condition="'$(Configuration)' == 'Debug_2020' Or '$(Configuration)' == 'Release_2020'">
+		<Reference Include="Autodesk.Navisworks.Api, Version=17.0.1336.83, Culture=neutral, PublicKeyToken=d85e58fa5af9b484">
+			<HintPath>..\ApiDlls\2020_dll\Autodesk.Navisworks.Api.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Autodesk.Navisworks.ComApi">
+			<HintPath>..\ApiDlls\2020_dll\Autodesk.Navisworks.ComApi.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Autodesk.Navisworks.Interop.ComApi">
+			<HintPath>..\ApiDlls\2020_dll\Autodesk.Navisworks.Interop.ComApi.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Autodesk.Navisworks.Interop.ComApi">
+			<HintPath>..\ApiDlls\2020_dll\Autodesk.Navisworks.Clash.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+	</ItemGroup>
+	
+	<ItemGroup Condition="'$(Configuration)' == 'Debug_2021' Or '$(Configuration)' == 'Release_2021'">
+		<Reference Include="Autodesk.Navisworks.Api, Version=18.0.1347.51, Culture=neutral, PublicKeyToken=d85e58fa5af9b484">
+			<HintPath>..\ApiDlls\2021_dll\Autodesk.Navisworks.Api.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Autodesk.Navisworks.ComApi">
+			<HintPath>..\ApiDlls\2021_dll\Autodesk.Navisworks.ComApi.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Autodesk.Navisworks.Interop.ComApi">
+			<HintPath>..\ApiDlls\2021_dll\Autodesk.Navisworks.Interop.ComApi.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Autodesk.Navisworks.Interop.ComApi">
+			<HintPath>..\ApiDlls\2021_dll\Autodesk.Navisworks.Clash.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+	</ItemGroup>
+	
+	<ItemGroup Condition="'$(Configuration)' == 'Debug_2022' Or '$(Configuration)' == 'Release_2022'">
+		<Reference Include="Autodesk.Navisworks.Api, Version=19.0.1374.1, Culture=neutral, PublicKeyToken=d85e58fa5af9b484">
+			<HintPath>..\ApiDlls\2022_dll\Autodesk.Navisworks.Api.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Autodesk.Navisworks.ComApi">
+			<HintPath>..\ApiDlls\2022_dll\Autodesk.Navisworks.ComApi.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Autodesk.Navisworks.Interop.ComApi">
+			<HintPath>..\ApiDlls\2022_dll\Autodesk.Navisworks.Interop.ComApi.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Autodesk.Navisworks.Interop.ComApi">
+			<HintPath>..\ApiDlls\2022_dll\Autodesk.Navisworks.Clash.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+	</ItemGroup>
 
 	<ItemGroup>
 		<None Remove="Resources\PM.ico" />
 		<None Remove="Views\MainWindow.xaml" />
-	</ItemGroup>
-	<ItemGroup>
-		<Reference Include="Autodesk.Navisworks.Api">
-			<HintPath>..\ApiDlls\2022_dll\Autodesk.Navisworks.Api.dll</HintPath>
-			<Private>false</Private>
-		</Reference>
-		<Reference Include="Autodesk.Navisworks.Clash">
-			<HintPath>..\ApiDlls\2022_dll\Autodesk.Navisworks.Clash.dll</HintPath>
-			<Private>false</Private>
-		</Reference>
-		<Reference Include="Autodesk.Navisworks.ComApi">
-			<HintPath>..\ApiDlls\2022_dll\Autodesk.Navisworks.ComApi.dll</HintPath>
-			<Private>false</Private>
-		</Reference>
-		<Reference Include="Autodesk.Navisworks.Interop.ComApi">
-			<HintPath>..\ApiDlls\2022_dll\Autodesk.Navisworks.Interop.ComApi.dll</HintPath>
-			<Private>false</Private>
-		</Reference>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -52,7 +100,16 @@
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 	</ItemGroup>
-
+	
+	<ItemGroup>
+		<Page Include="Utilities\ProgressBar\ProgressDefined.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Utilities\ProgressBar\ProgressUndefined.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	
 	<ItemGroup>
 		<Resource Include="Resources\PM.ico" />
 	</ItemGroup>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace PM.Navisworks.DataExtraction.Utilities
+namespace PM.Navisworks.ZoneTool.Utilities
 {
     public abstract class BindableBase : INotifyPropertyChanged
     {
