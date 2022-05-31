@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PM.Navisworks.ClashTool.Extensions
+namespace PM.Navisworks.ZoneTool.Extensions
 {
     public static class NavisworksExtensions
     {

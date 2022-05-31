@@ -5,10 +5,10 @@ using System.Windows.Forms.Integration;
 
 namespace PM.Navisworks.ZoneTool
 {
-    [Plugin("PM.Navisworks.ClashTool",
+    [Plugin("PM.Navisworks.ZoneTool",
         "PMJF",
         ToolTip = "Clash management tool.",
-        DisplayName = "Clash\nTool")]
+        DisplayName = "Zone\nTool")]
     public class Main : AddInPlugin
     {
         private static MainWindow _window;

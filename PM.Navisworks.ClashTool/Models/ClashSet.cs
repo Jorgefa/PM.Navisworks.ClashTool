@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PM.Navisworks.ClashTool.Models
+namespace PM.Navisworks.ZoneTool.Models
 {
     public class ClashSet : BindableBase
     {

@@ -1,6 +1,6 @@
 ﻿using PM.Navisworks.DataExtraction.Utilities;
 
-namespace PM.Navisworks.ClashTool.Models
+namespace PM.Navisworks.ZoneTool.Models
 {
     public class ClashSetPair : BindableBase
     {

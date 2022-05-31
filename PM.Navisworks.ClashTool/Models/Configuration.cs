@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 
-namespace PM.Navisworks.ClashTool.Models
+namespace PM.Navisworks.ZoneTool.Models
 {
     public class Configuration : BindableBase
     {

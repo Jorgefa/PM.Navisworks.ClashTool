@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net47</TargetFramework>
@@ -7,14 +7,13 @@
 		<Platforms>x64</Platforms>
 		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 		<GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
-		<AssemblyName>PM.Navisworks.ClashTool.PMJF</AssemblyName>
+		<AssemblyName>PM.Navisworks.ZoneTool.PMJF</AssemblyName>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="Resources\PM.ico" />
-	  <None Remove="Views\MainWindow.xaml" />
+		<None Remove="Resources\PM.ico" />
+		<None Remove="Views\MainWindow.xaml" />
 	</ItemGroup>
-
 	<ItemGroup>
 		<Reference Include="Autodesk.Navisworks.Api">
 			<HintPath>C:\Program Files\Autodesk\Navisworks Manage 2022\Autodesk.Navisworks.Api.dll</HintPath>
@@ -49,16 +48,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Page Include="Views\MainWindow.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
+		<Page Include="Views\MainWindow.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Resource Include="Resources\PM.ico" />
+		<Resource Include="Resources\PM.ico" />
 	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Exec Command="IF EXIST &quot;C:\Program Files\Autodesk\Navisworks Manage 2022\Plugins\$(TargetName)\&quot; rmdir /S /Q &quot;$(ProjectDir)..\..\..\..\..\Plugins\$(TargetName)\&quot;&#xA;xcopy /Y &quot;$(TargetDir)*.*&quot; &quot;C:\Program Files\Autodesk\Navisworks Manage 2022\Plugins\PM.Navisworks.ClashTool.PMJF\&quot;" />
+		<Exec Command="IF EXIST &quot;C:\Program Files\Autodesk\Navisworks Manage 2022\Plugins\$(TargetName)\&quot; rmdir /S /Q &quot;$(ProjectDir)..\..\..\..\..\Plugins\$(TargetName)\&quot;&#xA;xcopy /Y &quot;$(TargetDir)*.*&quot; &quot;C:\Program Files\Autodesk\Navisworks Manage 2022\Plugins\PM.Navisworks.ZoneTool.PMJF\&quot;" />
 	</Target>
 </Project>

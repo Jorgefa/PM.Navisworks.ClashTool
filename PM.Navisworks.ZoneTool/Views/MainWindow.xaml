@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:PM.Navisworks.ZoneTool.ViewModels"
-    Title="Navisworks Clash Tool"
+    Title="Navisworks Zone Tool"
     Width="900"
     Height="720"
     d:DataContext="{d:DesignInstance Type=viewModels:MainWindowViewModel,
@@ -21,12 +21,11 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel>
-            <TextBox Text="Hello!!" />
             <Button Command="{Binding TestButtonCommand}" Content="Play" />
+            <Button Command="{Binding SelectElementsCommand}" Content="Select elements" />
+            <Button Command="{Binding SelectZonesCommand}" Content="Select zones" />
+            <Button Command="{Binding GetElementsCommand}" Content="Get elements" />
+            <Button Command="{Binding GetZonesCommand}" Content="Get zones" />
         </StackPanel>
-        <DataGrid
-            Grid.Row="1"
-            AutoGenerateColumns="True"
-            ItemsSource="{Binding Configuration.ClashTestsMatrix, Mode=TwoWay}" />
     </Grid>
 </Window>
