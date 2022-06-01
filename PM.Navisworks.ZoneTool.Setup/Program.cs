@@ -81,7 +81,7 @@ namespace PM.Navisworks.ZoneTool.Setup
         private static Version GetVersion()
         {
             const int majorVersion = 0;
-            const int minorVersion = 1;
+            const int minorVersion = 3;
             var daysSinceProjectStarted = (int)((DateTime.UtcNow - ProjectStartedDate).TotalDays);
             var minutesSinceMidnight = (int)DateTime.UtcNow.TimeOfDay.TotalMinutes;
             var version = $"{majorVersion}.{minorVersion}.{daysSinceProjectStarted}.{minutesSinceMidnight}";
