@@ -23,5 +23,13 @@ namespace PM.Navisworks.ZoneTool.Models
             get { return _zoneProperty; }
             set { SetProperty(ref _zoneProperty, value); }
         }
+
+        private bool _updatePrevValues = false;
+
+        public bool UpdatePrevValues
+        {
+            get { return _updatePrevValues; }
+            set { SetProperty(ref _updatePrevValues, value); }
+        }
     }
 }

@@ -8,7 +8,7 @@
     xmlns:viewModels="clr-namespace:PM.Navisworks.ZoneTool.ViewModels"
     Title="Navisworks Zone Tool"
     Width="450"
-    Height="540"
+    Height="600"
     d:DataContext="{d:DesignInstance Type=viewModels:MainWindowViewModel,
                                      IsDesignTimeCreatable=True}"
     Icon="../Resources/PM.ico"
@@ -79,6 +79,14 @@
         </StackPanel>
         <StackPanel Grid.Row="3" Margin="0,0,0,0">
             <hc:Divider Margin="2" Content="Zones" />
+            <CheckBox
+                    Margin="0,2,0,5"
+                    Content="Update previous values"
+                    IsChecked="{Binding Configuration.UpdatePrevValues}"
+                    ToolTip="Updating previous values will increase the procesing time."
+                    ToolTipService.BetweenShowDelay="2000"
+                    ToolTipService.InitialShowDelay="500"
+                    ToolTipService.ShowDuration="6000" />
             <hc:ButtonGroup
                 Grid.Row="2"
                 Grid.Column="0"

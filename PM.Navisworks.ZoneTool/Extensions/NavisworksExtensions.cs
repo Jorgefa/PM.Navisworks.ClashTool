@@ -35,8 +35,9 @@ namespace PM.Navisworks.ZoneTool.Extensions
             }
         }
 
-        public static void AddZoneToElements(this ModelItemCollection elements, ModelItemCollection zones, string category, string property)
+        public static void AddZoneToElements(this ModelItemCollection elements, ModelItemCollection zones, string category, string property, bool updatePrevious)
         {
+            var document = Application.ActiveDocument;
             var cDocument = ComApiBridge.State;
 
             var catDisplayName = "PMG";
@@ -60,10 +61,30 @@ namespace PM.Navisworks.ZoneTool.Extensions
                 }
             }
 
+            
+
+            // filter elements if don't want to update previous values
+
+            if (!updatePrevious)
+            {
+                var search = new Search();
+                search.Selection.CopyFrom(elements);
+                search.PruneBelowMatch = true;
+                search.Locations = SearchLocations.Self;
+
+                var condition = SearchCondition.HasPropertyByDisplayName(catDisplayName, propDisplayName).Negate();
+
+                search.SearchConditions.Add(condition);
+
+                elements = search.FindAll(document, true);
+            }
+
             var current = 0;
             var total = elements.Count;
 
             ProgressUtilDefined.Start();
+
+
 
             foreach (var ele in elements)
             {
@@ -94,6 +115,11 @@ namespace PM.Navisworks.ZoneTool.Extensions
             }
 
             ProgressUtilDefined.Finish();
+
+            document.CurrentSelection.Clear();
+            document.CurrentSelection.AddRange(elements);
+
+            MessageBox.Show(elements.Count.ToString() + " elements has been updated.");
 
         }
 

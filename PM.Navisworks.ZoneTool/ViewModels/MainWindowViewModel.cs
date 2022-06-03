@@ -65,7 +65,7 @@ namespace PM.Navisworks.ZoneTool.ViewModels
             {
                 return;
             }
-            _elements.AddZoneToElements(_zones, _configuration.ZoneCategory, _configuration.ZoneProperty);
+            _elements.AddZoneToElements(_zones, _configuration.ZoneCategory, _configuration.ZoneProperty, Configuration.UpdatePrevValues);
         }
 
         public DelegateCommand SelectElementsCommand { get; }
@@ -82,6 +82,7 @@ namespace PM.Navisworks.ZoneTool.ViewModels
             }
             _elements.Clear();
             _elements.AddRange(_document.CurrentSelection.SelectedItems);
+
             MessageBox.Show(_elements.Count.ToString() + " elements have been selected.");
         }
 
@@ -99,6 +100,7 @@ namespace PM.Navisworks.ZoneTool.ViewModels
             }
             _zones.Clear();
             _zones.AddRange(_document.CurrentSelection.SelectedItems);
+
             MessageBox.Show(_zones.Count.ToString() + " zones have been selected.");
         }
 
@@ -106,45 +108,30 @@ namespace PM.Navisworks.ZoneTool.ViewModels
 
         private void GetElements()
         {
-            //var search = new Search();
-            //search.Selection.SelectAll();
-            //search.PruneBelowMatch = true;
-
-            //var conditionA = SearchCondition.HasPropertyByDisplayName("Element","Workset");
-            //var conditionB = SearchCondition.HasPropertyByDisplayName("Item", "Source File").EqualValue(new VariantData("IFC-PMG-00-ZZ-MO-A-002-CLEARANCE.rvt")).Negate();
-
-            //search.SearchConditions.Add(conditionA);
-            //search.SearchConditions.Add(conditionB);
-
-            //_elements = search.FindAll(_document, true);
             if (_elements == null)
             {
                 _elements = new ModelItemCollection();
             }
-            MessageBox.Show(_elements.Count.ToString() + " elements.");
             _document.CurrentSelection.Clear();
             _document.CurrentSelection.AddRange(_elements);
+
+            MessageBox.Show(_elements.Count.ToString() + " elements.");
+
         }
 
         public DelegateCommand GetZonesCommand { get; }
 
         private void GetZones()
         {
-            //var search = new Search();
-            //search.Selection.SelectAll();
-            //search.PruneBelowMatch = true;
-
-            //var condition = SearchCondition.HasPropertyByDisplayName("Element", "ZoneNumber");
-            //search.SearchConditions.Add(condition);
-
-            //_zones = search.FindAll(_document, true);
             if (_zones == null)
             {
                 _zones = new ModelItemCollection();
             }
-            MessageBox.Show(_zones.Count.ToString() + " zones.");
             _document.CurrentSelection.Clear();
             _document.CurrentSelection.AddRange(_zones);
+
+            MessageBox.Show(_zones.Count.ToString() + " zones.");
+
         }
     }
 }
