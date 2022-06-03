@@ -31,5 +31,13 @@ namespace PM.Navisworks.ZoneTool.Models
             get { return _updatePrevValues; }
             set { SetProperty(ref _updatePrevValues, value); }
         }
+
+        private bool _searchBelowSelection = false;
+
+        public bool SearchBelowSelection
+        {
+            get { return _searchBelowSelection; }
+            set { SetProperty(ref _searchBelowSelection, value); }
+        }
     }
 }

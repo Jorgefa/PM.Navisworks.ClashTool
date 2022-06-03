@@ -65,7 +65,7 @@ namespace PM.Navisworks.ZoneTool.ViewModels
             {
                 return;
             }
-            _elements.AddZoneToElements(_zones, _configuration.ZoneCategory, _configuration.ZoneProperty, Configuration.UpdatePrevValues);
+            _elements.AddZoneToElements(_zones, _configuration);
         }
 
         public DelegateCommand SelectElementsCommand { get; }

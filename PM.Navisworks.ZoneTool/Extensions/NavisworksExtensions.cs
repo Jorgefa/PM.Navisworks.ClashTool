@@ -1,6 +1,7 @@
 ﻿using Autodesk.Navisworks.Api;
 using Autodesk.Navisworks.Api.ComApi;
 using Autodesk.Navisworks.Api.Interop.ComApi;
+using PM.Navisworks.ZoneTool.Models;
 using PM.Navisworks.ZoneTool.Utilities.ProgressBar;
 using System.Windows;
 using Application = Autodesk.Navisworks.Api.Application;
@@ -35,7 +36,7 @@ namespace PM.Navisworks.ZoneTool.Extensions
             }
         }
 
-        public static void AddZoneToElements(this ModelItemCollection elements, ModelItemCollection zones, string category, string property, bool updatePrevious)
+        public static void AddZoneToElements(this ModelItemCollection elements, ModelItemCollection zones, Configuration config)
         {
             var document = Application.ActiveDocument;
             var cDocument = ComApiBridge.State;
@@ -53,7 +54,7 @@ namespace PM.Navisworks.ZoneTool.Extensions
 
             foreach (var zone in zones)
             {
-                var zoneValue = zone.GetZoneParameter(category, property);
+                var zoneValue = zone.GetZoneParameter(config.ZoneCategory, config.ZoneProperty);
                 if (zoneValue == null)
                 {
                     MessageBox.Show("Zone parameter was not found in any zone.");
@@ -61,11 +62,9 @@ namespace PM.Navisworks.ZoneTool.Extensions
                 }
             }
 
-            
-
             // filter elements if don't want to update previous values
 
-            if (!updatePrevious)
+            if (!config.UpdatePrevValues)
             {
                 var search = new Search();
                 search.Selection.CopyFrom(elements);
@@ -106,7 +105,7 @@ namespace PM.Navisworks.ZoneTool.Extensions
                     if (zone.BoundingBox().Contains(eBBCP))
                     {
                         // get zone code
-                        zoneValue = zone.GetZoneParameter(category, property);
+                        zoneValue = zone.GetZoneParameter(config.ZoneCategory, config.ZoneProperty);
                         break;
                     }
                 }
