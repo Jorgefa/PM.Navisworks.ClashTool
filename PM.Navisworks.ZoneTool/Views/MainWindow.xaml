@@ -29,37 +29,61 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Margin="0,0,0,0">
-            <hc:Divider Margin="2" Content="Elements" />
+            <hc:Divider Margin="5" Content="Elements" />
             <hc:ButtonGroup
                 Grid.Row="2"
                 Grid.Column="0"
                 Margin="0,0,5,0"
                 VerticalAlignment="Bottom"
                 Orientation="Vertical">
-                <Button Command="{Binding SelectElementsCommand}" Content="Select elements" />
-                <Button Command="{Binding GetElementsCommand}" Content="Get elements" />
+                <Button
+                    Command="{Binding SelectElementsCommand}"
+                    Content="Select elements"
+                    ToolTip="Select elements in navisworks before clicking here."
+                    ToolTipService.BetweenShowDelay="2000"
+                    ToolTipService.InitialShowDelay="500"
+                    ToolTipService.ShowDuration="6000" />
+                <Button
+                    Command="{Binding GetElementsCommand}"
+                    Content="Get elements"
+                    ToolTip="Click to see elements selected."
+                    ToolTipService.BetweenShowDelay="2000"
+                    ToolTipService.InitialShowDelay="500"
+                    ToolTipService.ShowDuration="6000" />
             </hc:ButtonGroup>
         </StackPanel>
         <StackPanel Grid.Row="1" Margin="0,0,0,0">
-            <hc:Divider Margin="2" Content="Zones" />
+            <hc:Divider Margin="5" Content="Zones" />
             <hc:ButtonGroup
                 Grid.Row="2"
                 Grid.Column="0"
                 Margin="0,0,5,0"
                 VerticalAlignment="Bottom"
                 Orientation="Vertical">
-                <Button Command="{Binding SelectZonesCommand}" Content="Select zones" />
-                <Button Command="{Binding GetZonesCommand}" Content="Get zones" />
+                <Button
+                    Command="{Binding SelectZonesCommand}"
+                    Content="Select zones"
+                    ToolTip="Select zones in navisworks before clicking here."
+                    ToolTipService.BetweenShowDelay="2000"
+                    ToolTipService.InitialShowDelay="500"
+                    ToolTipService.ShowDuration="6000" />
+                <Button
+                    Command="{Binding GetZonesCommand}"
+                    Content="Get zones"
+                    ToolTip="Click to see zones selected."
+                    ToolTipService.BetweenShowDelay="2000"
+                    ToolTipService.InitialShowDelay="500"
+                    ToolTipService.ShowDuration="6000" />
             </hc:ButtonGroup>
         </StackPanel>
         <StackPanel Grid.Row="2" Margin="0,0,0,0">
-            <hc:Divider Margin="2" Content="Zones configuration" />
+            <hc:Divider Margin="5" Content="Configuration" />
             <TextBlock
                 HorizontalAlignment="Left"
                 Style="{StaticResource TextBlockDefaultSecLight}"
@@ -76,24 +100,31 @@
                 Margin="0,2,0,15"
                 hc:InfoElement.Placeholder="Searcher Name"
                 Text="{Binding Configuration.ZoneProperty}" />
+            <CheckBox
+                Margin="0,2,0,5"
+                Content="Update previous values"
+                IsChecked="{Binding Configuration.UpdatePrevValues}"
+                ToolTip="Updating previous values will increase the procesing time."
+                ToolTipService.BetweenShowDelay="2000"
+                ToolTipService.InitialShowDelay="500"
+                ToolTipService.ShowDuration="6000" />
         </StackPanel>
         <StackPanel Grid.Row="3" Margin="0,0,0,0">
             <hc:Divider Margin="2" Content="Zones" />
-            <CheckBox
-                    Margin="0,2,0,5"
-                    Content="Update previous values"
-                    IsChecked="{Binding Configuration.UpdatePrevValues}"
-                    ToolTip="Updating previous values will increase the procesing time."
-                    ToolTipService.BetweenShowDelay="2000"
-                    ToolTipService.InitialShowDelay="500"
-                    ToolTipService.ShowDuration="6000" />
+
             <hc:ButtonGroup
                 Grid.Row="2"
                 Grid.Column="0"
                 Margin="0,0,5,0"
                 VerticalAlignment="Bottom"
                 Orientation="Vertical">
-                <Button Command="{Binding AddZoneDataCommand}" Content="Run" />
+                <Button
+                    Command="{Binding AddZoneDataCommand}"
+                    Content="Run"
+                    ToolTip="Updating previous values will increase the procesing time."
+                    ToolTipService.BetweenShowDelay="2000"
+                    ToolTipService.InitialShowDelay="500"
+                    ToolTipService.ShowDuration="6000" />
             </hc:ButtonGroup>
         </StackPanel>
     </Grid>
