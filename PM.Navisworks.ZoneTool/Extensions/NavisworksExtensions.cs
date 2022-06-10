@@ -3,6 +3,7 @@ using Autodesk.Navisworks.Api.ComApi;
 using Autodesk.Navisworks.Api.Interop.ComApi;
 using PM.Navisworks.ZoneTool.Models;
 using PM.Navisworks.ZoneTool.Utilities.ProgressBar;
+using System.Collections.Generic;
 using System.Windows;
 using Application = Autodesk.Navisworks.Api.Application;
 
@@ -83,8 +84,6 @@ namespace PM.Navisworks.ZoneTool.Extensions
 
             ProgressUtilDefined.Start();
 
-
-
             foreach (var ele in elements)
             {
                 ProgressUtilDefined.Update($"{ele.ClassName} - {ele.ClassDisplayName}", current, total);
@@ -119,6 +118,72 @@ namespace PM.Navisworks.ZoneTool.Extensions
             document.CurrentSelection.AddRange(elements);
 
             MessageBox.Show(elements.Count.ToString() + " elements has been updated.");
+        }
+
+        public static void CreateZoneSelectionSets(this Document doc, ModelItemCollection elements, ModelItemCollection zones, Configuration config)
+        {
+            var selSets = doc.SelectionSets;
+
+            var folderName = "Zones-SelectionSets";
+
+            try
+            {
+                var folderIndex = selSets.Value.IndexOfDisplayName(folderName);
+
+                if (folderIndex == -1)
+                {
+                    selSets.AddCopy(new FolderItem() { DisplayName = folderName });
+                }
+
+                var zoneCollections = new Dictionary<ModelItem, ModelItemCollection>();
+
+                foreach (var zone in zones)
+                {
+                    zoneCollections.Add(zone, new ModelItemCollection());
+                }
+
+
+                foreach (var ele in elements)
+                {
+                    var eBB = ele.BoundingBox();
+                    if (eBB == null)
+                    {
+                        continue;
+                    }
+                    var eBBCP = eBB.Center;
+                    if (eBBCP == null)
+                    {
+                        continue;
+                    }
+                    foreach (var zoneCollection in zoneCollections)
+                    {
+                        if (zoneCollection.Key.BoundingBox().Contains(eBBCP))
+                        {
+                            zoneCollection.Value.Add(ele);
+                            break;
+                        }
+                    }
+                }
+
+                foreach (var zoneCollection in zoneCollections)
+                {
+                    var selSetName = zoneCollection.Key.GetZoneParameter(config.ZoneCategory, config.ZoneProperty);
+
+                    var newSet = new SelectionSet(zoneCollection.Value) { DisplayName = selSetName };
+                    selSets.AddCopy(newSet);
+
+                    var fo = selSets.Value[selSets.Value.IndexOfDisplayName(folderName)] as FolderItem;
+                    var ns = selSets.Value[selSets.Value.IndexOfDisplayName(selSetName)] as SavedItem;
+
+                    selSets.Move(ns.Parent, selSets.Value.IndexOfDisplayName(selSetName), fo, 0);
+                }
+
+            }
+            catch (System.Exception e)
+            {
+
+                MessageBox.Show(e.Message +"\n" + e.StackTrace);
+            }
 
         }
 

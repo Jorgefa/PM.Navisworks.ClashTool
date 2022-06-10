@@ -120,8 +120,15 @@
                 Orientation="Vertical">
                 <Button
                     Command="{Binding AddZoneDataCommand}"
-                    Content="Run"
-                    ToolTip="Updating previous values will increase the procesing time."
+                    Content="Add zone paramter to elements"
+                    ToolTip="Add zone parameter to each selected element."
+                    ToolTipService.BetweenShowDelay="2000"
+                    ToolTipService.InitialShowDelay="500"
+                    ToolTipService.ShowDuration="6000" />
+                <Button
+                    Command="{Binding CreateSelectionSetsCommand}"
+                    Content="Create one selection set for each zone"
+                    ToolTip="Create a new selection set for each zone."
                     ToolTipService.BetweenShowDelay="2000"
                     ToolTipService.InitialShowDelay="500"
                     ToolTipService.ShowDuration="6000" />
