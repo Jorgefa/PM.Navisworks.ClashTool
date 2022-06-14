@@ -120,7 +120,7 @@
                 Orientation="Vertical">
                 <Button
                     Command="{Binding AddZoneDataCommand}"
-                    Content="Add zone paramter to elements"
+                    Content="Add zone parameter to elements"
                     ToolTip="Add zone parameter to each selected element."
                     ToolTipService.BetweenShowDelay="2000"
                     ToolTipService.InitialShowDelay="500"

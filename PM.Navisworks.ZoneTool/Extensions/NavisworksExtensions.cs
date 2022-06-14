@@ -142,7 +142,6 @@ namespace PM.Navisworks.ZoneTool.Extensions
                     zoneCollections.Add(zone, new ModelItemCollection());
                 }
 
-
                 foreach (var ele in elements)
                 {
                     var eBB = ele.BoundingBox();
@@ -177,14 +176,11 @@ namespace PM.Navisworks.ZoneTool.Extensions
 
                     selSets.Move(ns.Parent, selSets.Value.IndexOfDisplayName(selSetName), fo, 0);
                 }
-
             }
             catch (System.Exception e)
             {
-
-                MessageBox.Show(e.Message +"\n" + e.StackTrace);
+                MessageBox.Show(e.Message + "\n" + e.StackTrace);
             }
-
         }
 
         public static string GetZoneParameter(this ModelItem item, string category, string property)
@@ -256,6 +252,26 @@ namespace PM.Navisworks.ZoneTool.Extensions
                     newProp.UserName = propDisplayName;
                     newProp.value = value;
                     newCat.Properties().Add(newProp);
+
+                    // if category is user defined and same name, keep existing parameters in new category (newCat)
+                    if (atrib.Properties().Count > 1)
+                    {
+                        foreach (InwOaProperty prop in atrib.Properties())
+                        {
+                            // check if there is already a zone parameter
+                            if (prop.UserName == propDisplayName)
+                            {
+                                continue;
+                            }
+                            // create a new Property (PropertyData) for the rest of the previous data
+                            InwOaProperty prevProp = (InwOaProperty)cDocument.ObjectFactory(nwEObjectType.eObjectType_nwOaProperty, null, null);
+                            prevProp.name = prop.name;
+                            prevProp.UserName = prop.UserName;
+                            prevProp.value = prop.value;
+                            newCat.Properties().Add(prevProp);
+                        }
+                    }
+
                     break;
                 }
 
