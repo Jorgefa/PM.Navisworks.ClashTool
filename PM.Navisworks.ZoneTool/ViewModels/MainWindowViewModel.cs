@@ -143,6 +143,10 @@ namespace PM.Navisworks.ZoneTool.ViewModels
             {
                 return;
             }
+            if (_elements == null)
+            {
+                return;
+            }
 
             _document.CreateZoneSelectionSets(_elements, _zones, _configuration);
 

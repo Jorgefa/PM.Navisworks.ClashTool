@@ -3,6 +3,7 @@ using Autodesk.Navisworks.Api.ComApi;
 using Autodesk.Navisworks.Api.Interop.ComApi;
 using PM.Navisworks.ZoneTool.Models;
 using PM.Navisworks.ZoneTool.Utilities.ProgressBar;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using Application = Autodesk.Navisworks.Api.Application;
@@ -124,64 +125,66 @@ namespace PM.Navisworks.ZoneTool.Extensions
         {
             var selSets = doc.SelectionSets;
 
-            var folderName = "Zones-SelectionSets";
+            var selectionsSetsFolderName = config.SelectionSetsFolderName;
+
+            var zoneCollections = doc.GetZoneAndElements(elements, zones);
 
             try
             {
-                var folderIndex = selSets.Value.IndexOfDisplayName(folderName);
+                var folderIndex = selSets.Value.IndexOfDisplayName(selectionsSetsFolderName);
 
                 if (folderIndex == -1)
                 {
-                    selSets.AddCopy(new FolderItem() { DisplayName = folderName });
+                    selSets.AddCopy(new FolderItem() { DisplayName = selectionsSetsFolderName });
                 }
 
-                var zoneCollections = new Dictionary<ModelItem, ModelItemCollection>();
-
-                foreach (var zone in zones)
-                {
-                    zoneCollections.Add(zone, new ModelItemCollection());
-                }
-
-                foreach (var ele in elements)
-                {
-                    var eBB = ele.BoundingBox();
-                    if (eBB == null)
-                    {
-                        continue;
-                    }
-                    var eBBCP = eBB.Center;
-                    if (eBBCP == null)
-                    {
-                        continue;
-                    }
-                    foreach (var zoneCollection in zoneCollections)
-                    {
-                        if (zoneCollection.Key.BoundingBox().Contains(eBBCP))
-                        {
-                            zoneCollection.Value.Add(ele);
-                            break;
-                        }
-                    }
-                }
 
                 foreach (var zoneCollection in zoneCollections)
                 {
-                    var selSetName = zoneCollection.Key.GetZoneParameter(config.ZoneCategory, config.ZoneProperty);
+                    var setName = zoneCollection.Key.GetZoneParameter(config.ZoneCategory, config.ZoneProperty);
 
-                    var newSet = new SelectionSet(zoneCollection.Value) { DisplayName = selSetName };
-                    selSets.AddCopy(newSet);
+                    var elementsGroup = zoneCollection.Value;
 
-                    var fo = selSets.Value[selSets.Value.IndexOfDisplayName(folderName)] as FolderItem;
-                    var ns = selSets.Value[selSets.Value.IndexOfDisplayName(selSetName)] as SavedItem;
-
-                    selSets.Move(ns.Parent, selSets.Value.IndexOfDisplayName(selSetName), fo, 0);
+                    doc.CreateSelectionSetInFolder(elementsGroup, setName, selectionsSetsFolderName);
                 }
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 MessageBox.Show(e.Message + "\n" + e.StackTrace);
             }
         }
+
+        public static void CreateSelectionSetInFolder(this Document doc, ModelItemCollection elements, string setName, string folderName)
+        {
+            var selSets = doc.SelectionSets;
+
+            var newSet = new SelectionSet(elements) { DisplayName = setName };
+
+            selSets.AddCopy(newSet);
+
+            var fo = selSets.Value[selSets.Value.IndexOfDisplayName(folderName)] as FolderItem;
+            var ns = selSets.Value[selSets.Value.IndexOfDisplayName(setName)] as SavedItem;
+
+            selSets.Move(ns.Parent, selSets.Value.IndexOfDisplayName(setName), fo, 0);
+        }
+
+        //public static void CreateZoneViews(this Document doc, ModelItemCollection elements, ModelItemCollection zones, Configuration config)
+        //{
+        //    try
+        //    {
+        //        doc.Models.OverridePermanentColor(elements, new Color(1, 0, 0));
+        //        doc.Models.OverridePermanentTransparency(elements, 0.5);
+
+        //        var cDoc = ComApiBridge.State;
+
+        //        var cv = cDoc.CurrentView.ViewPoint;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        MessageBox.Show(e.Message + "\n" + e.StackTrace);
+        //        throw;
+        //    }
+        //}
 
         public static string GetZoneParameter(this ModelItem item, string category, string property)
         {
@@ -278,6 +281,47 @@ namespace PM.Navisworks.ZoneTool.Extensions
                 // add CategoryData to item's CategoryDataCollection
                 cItemCats.SetUserDefined(index, catDisplayName, catName, newCat);
             }
+        }
+
+        public static Dictionary<ModelItem, ModelItemCollection> GetZoneAndElements(this Document doc, ModelItemCollection elements, ModelItemCollection zones)
+        {
+            var zoneCollections = new Dictionary<ModelItem, ModelItemCollection>();
+
+            try
+            {
+                foreach (var zone in zones)
+                {
+                    zoneCollections.Add(zone, new ModelItemCollection());
+                }
+
+                foreach (var ele in elements)
+                {
+                    var eBB = ele.BoundingBox();
+                    if (eBB == null)
+                    {
+                        continue;
+                    }
+                    var eBBCP = eBB.Center;
+                    if (eBBCP == null)
+                    {
+                        continue;
+                    }
+                    foreach (var zoneCollection in zoneCollections)
+                    {
+                        if (zoneCollection.Key.BoundingBox().Contains(eBBCP))
+                        {
+                            zoneCollection.Value.Add(ele);
+                            break;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message + "\n" + e.StackTrace);
+            }
+
+            return zoneCollections;
         }
     }
 }

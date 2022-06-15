@@ -39,5 +39,20 @@ namespace PM.Navisworks.ZoneTool.Models
             get { return _searchBelowSelection; }
             set { SetProperty(ref _searchBelowSelection, value); }
         }
+
+        private string _searchSetsFolderName = "PMG-Zones";
+
+        public string SelectionSetsFolderName
+        {
+            get { return _searchSetsFolderName; }
+            set { SetProperty(ref _searchSetsFolderName, value); }
+        }
+        private string _viewsFolderName = "PMG-Zones";
+
+        public string ViewsFolderName
+        {
+            get { return _viewsFolderName; }
+            set { SetProperty(ref _viewsFolderName, value); }
+        }
     }
 }
