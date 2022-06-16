@@ -83,8 +83,6 @@ namespace PM.Navisworks.ZoneTool.ViewModels
             }
             _elements.Clear();
             _elements.AddRange(_document.CurrentSelection.SelectedItems);
-
-            MessageBox.Show(_elements.Count.ToString() + " elements have been selected.");
         }
 
         public DelegateCommand SelectZonesCommand { get; }
@@ -101,8 +99,6 @@ namespace PM.Navisworks.ZoneTool.ViewModels
             }
             _zones.Clear();
             _zones.AddRange(_document.CurrentSelection.SelectedItems);
-
-            MessageBox.Show(_zones.Count.ToString() + " zones have been selected.");
         }
 
         public DelegateCommand GetElementsCommand { get; }

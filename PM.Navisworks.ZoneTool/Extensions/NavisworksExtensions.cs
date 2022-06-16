@@ -1,5 +1,6 @@
 ﻿using Autodesk.Navisworks.Api;
 using Autodesk.Navisworks.Api.ComApi;
+using Autodesk.Navisworks.Api.DocumentParts;
 using Autodesk.Navisworks.Api.Interop.ComApi;
 using PM.Navisworks.ZoneTool.Models;
 using PM.Navisworks.ZoneTool.Utilities.ProgressBar;
@@ -125,27 +126,52 @@ namespace PM.Navisworks.ZoneTool.Extensions
         {
             var selSets = doc.SelectionSets;
 
-            var selectionsSetsFolderName = config.SelectionSetsFolderName;
+            var folderName = config.FolderName;
 
             var zoneCollections = doc.GetZoneAndElements(elements, zones);
 
+            var selSetDoc = doc.SelectionSets.RootItem;
+
             try
             {
-                var folderIndex = selSets.Value.IndexOfDisplayName(selectionsSetsFolderName);
+                FolderItem folder;
+                var matchFolders = selSetDoc.FindItemsByDisplayName(folderName);
 
-                if (folderIndex == -1)
+                if (matchFolders.Count == 0)
                 {
-                    selSets.AddCopy(new FolderItem() { DisplayName = selectionsSetsFolderName });
+                    folder = new FolderItem() { DisplayName = folderName };
+                    selSets.AddCopy(folder);
+                    folder = (FolderItem)selSetDoc.FindItemsByDisplayName(folderName)[0];
                 }
-
+                else if (matchFolders.Count == 1)
+                {
+                    folder = (FolderItem)matchFolders[0];
+                }
+                else
+                {
+                    MessageBox.Show("There is already more than one folder with that name. Please select a new name or use a name of a unique existing folder that you want to update.");
+                    return;
+                }
 
                 foreach (var zoneCollection in zoneCollections)
                 {
+                    SavedItem item;
+
                     var setName = zoneCollection.Key.GetZoneParameter(config.ZoneCategory, config.ZoneProperty);
 
                     var elementsGroup = zoneCollection.Value;
 
-                    doc.CreateSelectionSetInFolder(elementsGroup, setName, selectionsSetsFolderName);
+                    var matchItems = selSetDoc.FindItemsByDisplayName(setName);
+
+                    if (matchItems.Count == 1 && (FolderItem)matchItems[0].Parent == folder)
+                    {
+                        item = matchItems[0];
+                        doc.UpdateSelectionSet(elementsGroup, (SelectionSet)item);
+                    }
+                    else
+                    {
+                        doc.CreateSelectionSetInFolder(elementsGroup, setName, config.Prefix, folder);
+                    }
                 }
             }
             catch (Exception e)
@@ -154,30 +180,101 @@ namespace PM.Navisworks.ZoneTool.Extensions
             }
         }
 
-        public static void CreateSelectionSetInFolder(this Document doc, ModelItemCollection elements, string setName, string folderName)
+        public static List<SavedItem> FindItemsByDisplayName(this SavedItem item, string displayName)
+        {
+            var matchItems = new List<SavedItem>();
+
+            if (item.DisplayName == displayName)
+            {
+                matchItems.Add(item);
+            }
+
+            //See if this SavedItem is a GroupItem
+            if (item.IsGroup)
+            {
+                //iterate the children and output
+                foreach (SavedItem childItem in ((GroupItem)item).Children)
+                {
+                    matchItems.AddRange(childItem.FindItemsByDisplayName(displayName));
+                }
+            }
+
+            return matchItems;
+        }
+
+        public static void UpdateSelectionSet(this Document doc, ModelItemCollection elements, SelectionSet selectionSet)
+        {
+            //Set variables
+            var item = selectionSet;
+            var parent = item.Parent;
+            var index = parent.Children.IndexOf(item);
+
+            //Copy item
+            var copyItem = item.CreateCopy() as SelectionSet;
+
+            //Get DocumentSelectionsSets
+            var docSelSets = doc.SelectionSets;
+
+            ////change name
+            //copyItem.DisplayName += "_Updated";
+
+            //change selection
+            copyItem.ExplicitModelItems.CopyFrom(elements);
+
+            docSelSets.ReplaceWithCopy(parent, index, copyItem);
+        }
+
+        public static void CreateSelectionSetInFolder(this Document doc, ModelItemCollection elements, string prefix, string setName, FolderItem folder)
         {
             var selSets = doc.SelectionSets;
 
-            var newSet = new SelectionSet(elements) { DisplayName = setName };
+            var set = new SelectionSet(elements) { DisplayName = prefix+setName };
 
-            selSets.AddCopy(newSet);
+            selSets.AddCopy(set);
 
-            var fo = selSets.Value[selSets.Value.IndexOfDisplayName(folderName)] as FolderItem;
-            var ns = selSets.Value[selSets.Value.IndexOfDisplayName(setName)] as SavedItem;
+            var oldParent = selSets.Value;
 
-            selSets.Move(ns.Parent, selSets.Value.IndexOfDisplayName(setName), fo, 0);
+            var oldIndex = selSets.Value.IndexOfDisplayName(setName);
+
+            var newSet = oldParent[oldIndex];
+
+            selSets.Move(newSet.Parent, oldIndex, folder, 0);
         }
 
-        //public static void CreateZoneViews(this Document doc, ModelItemCollection elements, ModelItemCollection zones, Configuration config)
+        //public static void CreateZoneViewsAndSelectionSets(this Document doc, ModelItemCollection elements, ModelItemCollection zones, Configuration config)
         //{
+        //    var selSets = doc.SelectionSets;
+
+        //    var folderName = config.FolderName;
+
+        //    var zoneCollections = doc.GetZoneAndElements(elements, zones);
+
+        //    var selSetDoc = doc.SelectionSets.RootItem;
+
+        //    var viewPointDoc = doc.SavedViewpoints.RootItem;
+
+        //    var cDoc = ComApiBridge.State;
+
         //    try
         //    {
-        //        doc.Models.OverridePermanentColor(elements, new Color(1, 0, 0));
-        //        doc.Models.OverridePermanentTransparency(elements, 0.5);
+        //        doc.CreateZoneSelectionSets(elements, zones, config);
 
-        //        var cDoc = ComApiBridge.State;
+        //        FolderItem folder = (FolderItem)selSetDoc.FindItemsByDisplayName(folderName)[0];
 
-        //        var cv = cDoc.CurrentView.ViewPoint;
+        //        var sets = folder.Children;
+
+        //        foreach (var set in sets)
+        //        {
+        //            var viewName = set.DisplayName;
+
+        //            doc.Models.OverridePermanentColor(elements, new Color(1, 0, 0));
+        //            doc.Models.OverridePermanentTransparency(elements, 0.5);
+
+        //            var viewPoint = new SavedViewpoint(doc.CurrentViewpoint.ToViewpoint());
+
+        //            doc.SavedViewpoints.AddCopy(viewPoint);
+        //        }
+
         //    }
         //    catch (Exception e)
         //    {

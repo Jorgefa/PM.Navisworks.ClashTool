@@ -35,6 +35,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+
         <StackPanel Grid.Row="0" Margin="0,0,0,0">
             <hc:Divider Margin="5" Content="Elements" />
             <hc:ButtonGroup
@@ -59,6 +60,7 @@
                     ToolTipService.ShowDuration="6000" />
             </hc:ButtonGroup>
         </StackPanel>
+
         <StackPanel Grid.Row="1" Margin="0,10,0,0">
             <hc:Divider Margin="5" Content="Zones" />
             <hc:ButtonGroup
@@ -83,6 +85,7 @@
                     ToolTipService.ShowDuration="6000" />
             </hc:ButtonGroup>
         </StackPanel>
+
         <StackPanel Grid.Row="2" Margin="0,10,0,0">
             <hc:Divider Margin="5" Content="Configuration" />
             <TextBlock
@@ -105,7 +108,6 @@
         </StackPanel>
         <StackPanel Grid.Row="3" Margin="0,10,0,0">
             <hc:Divider Margin="2" Content="Adding data" />
-
             <hc:ButtonGroup
                 Grid.Row="2"
                 Grid.Column="0"
@@ -119,16 +121,17 @@
                     ToolTipService.BetweenShowDelay="2000"
                     ToolTipService.InitialShowDelay="500"
                     ToolTipService.ShowDuration="6000" />
-                <CheckBox
-                    Margin="0,2,0,5"
-                    Content="Update previous values"
-                    IsChecked="{Binding Configuration.UpdatePrevValues}"
-                    ToolTip="Updating previous values will increase the procesing time."
-                    ToolTipService.BetweenShowDelay="2000"
-                    ToolTipService.InitialShowDelay="500"
-                    ToolTipService.ShowDuration="6000" />
             </hc:ButtonGroup>
+            <CheckBox
+                Margin="0,2,0,5"
+                Content="Update previous values"
+                IsChecked="{Binding Configuration.UpdatePrevValues}"
+                ToolTip="Updating previous values will increase the procesing time."
+                ToolTipService.BetweenShowDelay="2000"
+                ToolTipService.InitialShowDelay="500"
+                ToolTipService.ShowDuration="6000" />
         </StackPanel>
+
         <StackPanel Grid.Row="4" Margin="0,10,0,0">
             <hc:Divider Margin="2" Content="Views creation" />
             <hc:ButtonGroup
@@ -161,6 +164,14 @@
                 Margin="0,2,0,15"
                 hc:InfoElement.Placeholder="Folder Name"
                 Text="{Binding Configuration.SelectionSetsFolderName}" />
+            <TextBlock
+                HorizontalAlignment="Left"
+                Style="{StaticResource TextBlockDefaultSecLight}"
+                Text="Prefix" />
+            <TextBox
+                Margin="0,2,0,15"
+                hc:InfoElement.Placeholder="Prefix"
+                Text="{Binding Configuration.Prefix}" />
         </StackPanel>
     </Grid>
 </Window>
