@@ -22,6 +22,7 @@ namespace PM.Navisworks.ZoneTool.ViewModels
             GetElementsCommand = new DelegateCommand(GetElements);
             GetZonesCommand = new DelegateCommand(GetZones);
             CreateSelectionSetsCommand = new DelegateCommand(CreateSelectionSets);
+            CreateSelectionSetsAndViewsCommand = new DelegateCommand(CreateSelectionSetsAndViews);
         }
 
         private readonly Document _document;
@@ -145,8 +146,22 @@ namespace PM.Navisworks.ZoneTool.ViewModels
             }
 
             _document.CreateZoneSelectionSets(_elements, _zones, _configuration);
+        }
 
-            MessageBox.Show(_zones.Count.ToString() + " selection set have been created.");
+        public DelegateCommand CreateSelectionSetsAndViewsCommand { get; }
+
+        private void CreateSelectionSetsAndViews()
+        {
+            if (_zones == null)
+            {
+                return;
+            }
+            if (_elements == null)
+            {
+                return;
+            }
+
+            _document.CreateZoneSelectionSetsAndViews(_elements, _zones, _configuration);
         }
     }
 }
