@@ -111,7 +111,7 @@ namespace PM.Navisworks.ZoneTool.Extensions
                         item = matchItems[0];
                         if (elementsGroup.Count == 0 && config.OnlyNotEmpty)
                         {
-                            item.Parent.Children.Remove(item);
+                            //Check if it is possible remove previous sets. Not through item.Parent.Children.Remove(item);
                             break;
                         }
                         doc.UpdateSelectionSet(elementsGroup, (SelectionSet)item);
