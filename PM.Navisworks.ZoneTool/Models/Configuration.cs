@@ -63,5 +63,14 @@ namespace PM.Navisworks.ZoneTool.Models
             get { return _prefix; }
             set { SetProperty(ref _prefix, value); }
         }
+
+        private bool _onlyNotEmpty = true;
+
+        public bool OnlyNotEmpty
+        {
+            get { return _onlyNotEmpty; }
+            set { SetProperty(ref _onlyNotEmpty, value); }
+        }
+
     }
 }

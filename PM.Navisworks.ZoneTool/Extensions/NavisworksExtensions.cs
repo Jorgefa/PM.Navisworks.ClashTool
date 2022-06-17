@@ -109,10 +109,20 @@ namespace PM.Navisworks.ZoneTool.Extensions
                     if (matchItems.Count == 1 && (FolderItem)matchItems[0].Parent == folder)
                     {
                         item = matchItems[0];
+                        if (elementsGroup.Count == 0 && config.OnlyNotEmpty)
+                        {
+                            item.Parent.Children.Remove(item);
+                            break;
+                        }
                         doc.UpdateSelectionSet(elementsGroup, (SelectionSet)item);
                     }
+
                     else
                     {
+                        if (elementsGroup.Count == 0 && config.OnlyNotEmpty)
+                        {
+                            break;
+                        }
                         doc.CreateSelectionSetInFolder(elementsGroup, setName, folder);
                     }
                 }
@@ -129,9 +139,9 @@ namespace PM.Navisworks.ZoneTool.Extensions
         {
             var selSets = doc.SelectionSets;
 
-            var folderName = config.FolderName;
+            var viewPoints = doc.SavedViewpoints;
 
-            var zoneCollections = doc.GetZoneBoxesAndElementsInside(elements, zones);
+            var folderName = config.FolderName;
 
             var selSetDoc = doc.SelectionSets.RootItem;
 
@@ -141,11 +151,35 @@ namespace PM.Navisworks.ZoneTool.Extensions
 
             try
             {
+                //Create sets
+
                 doc.CreateZoneSelectionSets(elements, zones, config);
 
-                FolderItem folder = (FolderItem)selSetDoc.FindItemsByDisplayName(folderName)[0];
+                FolderItem setsFolder = (FolderItem)selSetDoc.FindItemsByDisplayName(folderName)[0];
 
-                var sets = folder.Children;
+                var sets = setsFolder.Children;
+
+                //Check if views folder exists or create it if not.
+
+                FolderItem folder;
+
+                var matchFolders = viewPointDoc.FindItemsByDisplayName(folderName);
+
+                if (matchFolders.Count == 0)
+                {
+                    folder = new FolderItem() { DisplayName = folderName };
+                    viewPoints.AddCopy(folder);
+                    folder = (FolderItem)viewPointDoc.FindItemsByDisplayName(folderName)[0];
+                }
+                else if (matchFolders.Count == 1)
+                {
+                    folder = (FolderItem)matchFolders[0];
+                }
+                else
+                {
+                    MessageBox.Show("There is already more than one folder with that name. Please select a new name or use a name of a unique existing folder that you want to update.");
+                    return;
+                }
 
                 var current = 0;
                 var total = sets.Count;

@@ -162,23 +162,16 @@
             <TextBox
                 Margin="0,2,0,15"
                 hc:InfoElement.Placeholder="Folder Name"
-                Text="{Binding Configuration.ViewsFolderName}" />
-            <TextBlock
-                HorizontalAlignment="Left"
-                Style="{StaticResource TextBlockDefaultSecLight}"
-                Text="Views Folder name" />
-            <TextBox
-                Margin="0,2,0,15"
-                hc:InfoElement.Placeholder="Folder Name"
-                Text="{Binding Configuration.SelectionSetsFolderName}" />
-            <TextBlock
-                HorizontalAlignment="Left"
-                Style="{StaticResource TextBlockDefaultSecLight}"
-                Text="Prefix" />
-            <TextBox
-                Margin="0,2,0,15"
-                hc:InfoElement.Placeholder="Prefix"
-                Text="{Binding Configuration.Prefix}" />
+                Text="{Binding Configuration.FolderName}" />
+            <CheckBox
+                Margin="0,2,0,5"
+                Content="Create only sets/views with elements inside"
+                IsChecked="{Binding Configuration.OnlyNotEmpty}"
+                ToolTip="Create only sets/views with elements inside."
+                ToolTipService.BetweenShowDelay="2000"
+                ToolTipService.InitialShowDelay="500"
+                ToolTipService.ShowDuration="6000" />
+            
         </StackPanel>
     </Grid>
 </Window>
