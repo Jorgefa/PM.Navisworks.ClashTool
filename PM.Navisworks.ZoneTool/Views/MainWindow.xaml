@@ -43,7 +43,7 @@
                 Grid.Column="0"
                 Margin="0,0,5,0"
                 VerticalAlignment="Bottom"
-                Orientation="Vertical">
+                Orientation="Horizontal">
                 <Button
                     Command="{Binding SelectElementsCommand}"
                     Content="Select elements"
@@ -59,6 +59,10 @@
                     ToolTipService.InitialShowDelay="500"
                     ToolTipService.ShowDuration="6000" />
             </hc:ButtonGroup>
+            <!--<TextBlock HorizontalAlignment="Left" Style="{StaticResource TextBlockDefaultSecLight}">
+                <Run Text="{Binding Elements.Count}" />
+                <Run Text=" elements selected." />
+            </TextBlock>-->
         </StackPanel>
 
         <StackPanel Grid.Row="1" Margin="0,10,0,0">
@@ -68,7 +72,7 @@
                 Grid.Column="0"
                 Margin="0,0,5,0"
                 VerticalAlignment="Bottom"
-                Orientation="Vertical">
+                Orientation="Horizontal">
                 <Button
                     Command="{Binding SelectZonesCommand}"
                     Content="Select zones"
@@ -84,6 +88,10 @@
                     ToolTipService.InitialShowDelay="500"
                     ToolTipService.ShowDuration="6000" />
             </hc:ButtonGroup>
+            <!--<TextBlock HorizontalAlignment="Left" Style="{StaticResource TextBlockDefaultSecLight}">
+                <Run Text="{Binding Zones.Count}" />
+                <Run Text=" zones selected." />
+            </TextBlock>-->
         </StackPanel>
 
         <StackPanel Grid.Row="2" Margin="0,10,0,0">
@@ -139,7 +147,7 @@
                 Grid.Column="0"
                 Margin="0,0,5,0"
                 VerticalAlignment="Bottom"
-                Orientation="Vertical">
+                Orientation="Horizontal">
                 <Button
                     Command="{Binding CreateSelectionSetsCommand}"
                     Content="Create selection sets"
@@ -171,7 +179,7 @@
                 ToolTipService.BetweenShowDelay="2000"
                 ToolTipService.InitialShowDelay="500"
                 ToolTipService.ShowDuration="6000" />
-            
+
         </StackPanel>
     </Grid>
 </Window>

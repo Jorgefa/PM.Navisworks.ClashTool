@@ -12,9 +12,9 @@ namespace PM.Navisworks.ZoneTool.ViewModels
         public MainWindowViewModel(Document document)
         {
             _document = document;
-            _configuration = new Configuration();
-            _configuration.ZoneCategory = "Element";
-            _configuration.ZoneProperty = "ZoneNumber";
+            Configuration = new Configuration();
+            Configuration.ZoneCategory = "Element";
+            Configuration.ZoneProperty = "ZoneNumber";
 
             AddZoneDataCommand = new DelegateCommand(AddZoneData);
             SelectElementsCommand = new DelegateCommand(SelectElements);
@@ -24,6 +24,8 @@ namespace PM.Navisworks.ZoneTool.ViewModels
             CreateSelectionSetsCommand = new DelegateCommand(CreateSelectionSets);
             CreateSelectionSetsAndViewsCommand = new DelegateCommand(CreateSelectionSetsAndViews);
         }
+
+        //Properties
 
         private readonly Document _document;
 
@@ -59,11 +61,13 @@ namespace PM.Navisworks.ZoneTool.ViewModels
             set { SetProperty(ref _zoneParameter, value); }
         }
 
+        //Commands
+
         public DelegateCommand AddZoneDataCommand { get; }
 
         private void AddZoneData()
         {
-            if (_zones == null || _elements == null || Configuration.ZoneCategory == null || Configuration.ZoneProperty == null)
+            if (Zones == null || _elements == null || Configuration.ZoneCategory == null || Configuration.ZoneProperty == null)
             {
                 return;
             }

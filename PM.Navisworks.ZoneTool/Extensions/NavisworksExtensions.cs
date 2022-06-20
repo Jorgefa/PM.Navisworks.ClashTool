@@ -65,7 +65,6 @@ namespace PM.Navisworks.ZoneTool.Extensions
                     {
                         zoneCollectionsMerged.Add(zoneCode, zoneCollection.Value);
                     }
-
                     else
                     {
                         zoneCollectionsMerged[zoneCode].AddRange(zoneCollection.Value);
@@ -76,13 +75,13 @@ namespace PM.Navisworks.ZoneTool.Extensions
 
                 FolderItem folder;
 
-                var matchFolders = selSetDoc.FindItemsByDisplayName(folderName);
+                var matchFolders = selSetDoc.FindAllItemsByDisplayNameInAllLevels(folderName);
 
                 if (matchFolders.Count == 0)
                 {
                     folder = new FolderItem() { DisplayName = folderName };
                     selSets.AddCopy(folder);
-                    folder = (FolderItem)selSetDoc.FindItemsByDisplayName(folderName)[0];
+                    folder = (FolderItem)selSetDoc.FindAllItemsByDisplayNameInAllLevels(folderName)[0];
                 }
                 else if (matchFolders.Count == 1)
                 {
@@ -104,7 +103,7 @@ namespace PM.Navisworks.ZoneTool.Extensions
 
                     var elementsGroup = zoneCollection.Value;
 
-                    var matchItems = folder.FindItemsByDisplayName(setName);
+                    var matchItems = folder.FindAllItemsByDisplayNameInAllLevels(setName);
 
                     if (matchItems.Count == 1 && (FolderItem)matchItems[0].Parent == folder)
                     {
@@ -116,7 +115,6 @@ namespace PM.Navisworks.ZoneTool.Extensions
                         }
                         doc.UpdateSelectionSet(elementsGroup, (SelectionSet)item);
                     }
-
                     else
                     {
                         if (elementsGroup.Count == 0 && config.OnlyNotEmpty)
@@ -139,7 +137,7 @@ namespace PM.Navisworks.ZoneTool.Extensions
         {
             var selSets = doc.SelectionSets;
 
-            var viewPoints = doc.SavedViewpoints;
+            var savedViewPoints = doc.SavedViewpoints;
 
             var folderName = config.FolderName;
 
@@ -155,7 +153,7 @@ namespace PM.Navisworks.ZoneTool.Extensions
 
                 doc.CreateZoneSelectionSets(elements, zones, config);
 
-                FolderItem setsFolder = (FolderItem)selSetDoc.FindItemsByDisplayName(folderName)[0];
+                FolderItem setsFolder = (FolderItem)selSetDoc.FindAllItemsByDisplayNameInAllLevels(folderName)[0];
 
                 var sets = setsFolder.Children;
 
@@ -163,13 +161,13 @@ namespace PM.Navisworks.ZoneTool.Extensions
 
                 FolderItem folder;
 
-                var matchFolders = viewPointDoc.FindItemsByDisplayName(folderName);
+                var matchFolders = viewPointDoc.FindAllItemsByDisplayNameInAllLevels(folderName);
 
                 if (matchFolders.Count == 0)
                 {
                     folder = new FolderItem() { DisplayName = folderName };
-                    viewPoints.AddCopy(folder);
-                    folder = (FolderItem)viewPointDoc.FindItemsByDisplayName(folderName)[0];
+                    savedViewPoints.AddCopy(folder);
+                    folder = (FolderItem)viewPointDoc.FindAllItemsByDisplayNameInAllLevels(folderName)[0];
                 }
                 else if (matchFolders.Count == 1)
                 {
@@ -194,19 +192,39 @@ namespace PM.Navisworks.ZoneTool.Extensions
 
                     var viewName = set.DisplayName;
 
-                    doc.IsolateSelection(elementGroup);
+                    var matchItems = folder.FindAllItemsByDisplayNameInAllLevels(viewName);
 
-                    doc.SaveCurrentViewPoint(viewName);
+                    if (matchItems.Count == 1 && (FolderItem)matchItems[0].Parent == folder)
+                    {
+                        var curSavedViewPoint = (SavedViewpoint)matchItems[0];
+
+                        doc.IsolateSelection(elementGroup);
+                        doc.UpdateViewPoint(folder, curSavedViewPoint);
+                    }
+                    else
+                    {
+                        doc.IsolateSelection(elementGroup);
+
+                        doc.CreateViewPoint(viewName);
+
+                        var matchViews = savedViewPoints.RootItem.FindAllItemsByDisplayNameInFirstLevel(viewName);
+
+                        var newView = matchViews.Last();
+
+                        doc.MoveSavedViewToFolder(newView, folder);
+                    }
 
                     current++;
                 }
 
-                ProgressUtilDefined.Finish();
+                folder.Dispose();
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.Message + "\n" + e.StackTrace);
             }
+
+            ProgressUtilDefined.Finish();
         }
 
         public static void AddZoneToElements(this ModelItemCollection elements, ModelItemCollection zones, Configuration config)
@@ -320,22 +338,36 @@ namespace PM.Navisworks.ZoneTool.Extensions
         {
             var selSets = doc.SelectionSets;
 
-            var finalSetName = setName;
-
-            var set = new SelectionSet(elements) { DisplayName = finalSetName };
+            var set = new SelectionSet(elements) { DisplayName = setName };
 
             selSets.AddCopy(set);
 
-            var oldParent = selSets.Value;
+            var matchSets = selSets.RootItem.FindAllItemsByDisplayNameInFirstLevel(setName);
 
-            var oldIndex = selSets.Value.IndexOfDisplayName(finalSetName);
+            var newSet = matchSets.Last();
 
-            var newSet = oldParent[oldIndex];
-
-            selSets.Move(newSet.Parent, oldIndex, folder, 0);
+            doc.MoveSelectionSetToFolder(newSet, folder);
         }
 
-        public static List<SavedItem> FindItemsByDisplayName(this SavedItem item, string displayName)
+        public static void MoveSelectionSetToFolder(this Document doc, SavedItem selSet, FolderItem folder)
+        {
+            var selSets = doc.SelectionSets;
+
+            var oldIndex = selSet.Parent.Children.IndexOf(selSet);
+
+            selSets.Move(selSet.Parent, oldIndex, folder, 0);
+        }
+
+        public static void MoveSavedViewToFolder(this Document doc, SavedItem view, FolderItem folder)
+        {
+            var savedViewPoints = doc.SavedViewpoints;
+
+            var oldIndex = view.Parent.Children.IndexOf(view);
+
+            savedViewPoints.Move(view.Parent, oldIndex, folder, 0);
+        }
+
+        public static List<SavedItem> FindAllItemsByDisplayNameInAllLevels(this SavedItem item, string displayName)
         {
             var matchItems = new List<SavedItem>();
 
@@ -350,7 +382,27 @@ namespace PM.Navisworks.ZoneTool.Extensions
                 //iterate the children and output
                 foreach (SavedItem childItem in ((GroupItem)item).Children)
                 {
-                    matchItems.AddRange(childItem.FindItemsByDisplayName(displayName));
+                    matchItems.AddRange(childItem.FindAllItemsByDisplayNameInAllLevels(displayName));
+                }
+            }
+
+            return matchItems;
+        }
+
+        public static List<SavedItem> FindAllItemsByDisplayNameInFirstLevel(this SavedItem item, string displayName)
+        {
+            var matchItems = new List<SavedItem>();
+
+            //See if this SavedItem is a GroupItem
+            if (item.IsGroup)
+            {
+                //iterate the children and output
+                foreach (SavedItem childItem in ((GroupItem)item).Children)
+                {
+                    if (childItem.DisplayName == displayName)
+                    {
+                        matchItems.Add(childItem);
+                    }
                 }
             }
 
@@ -474,9 +526,10 @@ namespace PM.Navisworks.ZoneTool.Extensions
             }
         }
 
-        private static void SaveCurrentViewPoint(this Document doc, string name)
+        private static void CreateViewPoint(this Document doc, string name)
         {
             var state = ComApiBridge.State;
+
             var cv = state.CurrentView.Copy();
 
             var vp = state.ObjectFactory(nwEObjectType.eObjectType_nwOpView);
@@ -489,6 +542,17 @@ namespace PM.Navisworks.ZoneTool.Extensions
             view.anonview = (InwOpAnonView)cv;
 
             state.SavedViews().Add(vp);
+        }
+
+        private static void UpdateViewPoint(this Document doc, FolderItem folder, SavedViewpoint savedViewpoint)
+        {
+            var name = savedViewpoint.DisplayName;
+
+            var index = folder.Children.IndexOf(savedViewpoint);
+
+            var docSaveViews = doc.SavedViewpoints;
+
+            docSaveViews.ReplaceFromCurrentView(savedViewpoint);
         }
 
         public static void AddDataToItem(this ModelItem modelItem, InwOpState10 cDocument, string catDisplayName, string propDisplayName, string value)
