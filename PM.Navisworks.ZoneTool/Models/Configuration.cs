@@ -1,14 +1,16 @@
-﻿using PM.Navisworks.ZoneTool.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data;
-using System.Linq;
+﻿using Autodesk.Navisworks.Api;
+using PM.Navisworks.ZoneTool.Utilities;
 
 namespace PM.Navisworks.ZoneTool.Models
 {
     public class Configuration : BindableBase
     {
+        public Configuration()
+        {
+            ZonesOptions = new ZonesOptions();
+            ElementsOptions = new ElementsOptions();
+        }
+
         private string _zoneCategory;
 
         public string ZoneCategory
@@ -16,6 +18,7 @@ namespace PM.Navisworks.ZoneTool.Models
             get { return _zoneCategory; }
             set { SetProperty(ref _zoneCategory, value); }
         }
+
         private string _zoneProperty;
 
         public string ZoneProperty
@@ -32,7 +35,7 @@ namespace PM.Navisworks.ZoneTool.Models
             set { SetProperty(ref _updatePrevValues, value); }
         }
 
-        private bool _searchBelowSelection = false;
+        private bool _searchBelowSelection = true;
 
         public bool SearchBelowSelection
         {
@@ -48,22 +51,6 @@ namespace PM.Navisworks.ZoneTool.Models
             set { SetProperty(ref _folderName, value); }
         }
 
-        private string _viewsFolderName = "PMG-Zones";
-
-        public string ViewsFolderName
-        {
-            get { return _viewsFolderName; }
-            set { SetProperty(ref _viewsFolderName, value); }
-        }
-
-        private string _prefix = "Zone-";
-
-        public string Prefix
-        {
-            get { return _prefix; }
-            set { SetProperty(ref _prefix, value); }
-        }
-
         private bool _onlyNotEmpty = true;
 
         public bool OnlyNotEmpty
@@ -72,5 +59,20 @@ namespace PM.Navisworks.ZoneTool.Models
             set { SetProperty(ref _onlyNotEmpty, value); }
         }
 
+        private ZonesOptions _zonesOptions;
+
+        public ZonesOptions ZonesOptions
+        {
+            get { return _zonesOptions; }
+            set { SetProperty(ref _zonesOptions, value); }
+        }
+
+        private ElementsOptions _elementsOptions;
+
+        public ElementsOptions ElementsOptions
+        {
+            get { return _elementsOptions; }
+            set { SetProperty(ref _elementsOptions, value); }
+        }
     }
 }

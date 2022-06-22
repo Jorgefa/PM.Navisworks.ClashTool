@@ -59,7 +59,7 @@ namespace PM.Navisworks.ZoneTool.Extensions
 
                 foreach (var zoneCollection in zoneCollections)
                 {
-                    var zoneCode = zoneCollection.Key.GetZoneParameter(config.ZoneCategory, config.ZoneProperty);
+                    var zoneCode = zoneCollection.Key.GetZoneParameter(config.ZonesOptions.CodeCategory, config.ZonesOptions.CodeProperty);
 
                     if (!zoneCollectionsMerged.Keys.Contains(zoneCode))
                     {
@@ -184,6 +184,8 @@ namespace PM.Navisworks.ZoneTool.Extensions
 
                 ProgressUtilDefined.Start();
 
+                var allElements = doc.GetAllElements();
+
                 foreach (SelectionSet set in sets)
                 {
                     ProgressUtilDefined.Update($"{set.DisplayName}", current, total);
@@ -198,12 +200,12 @@ namespace PM.Navisworks.ZoneTool.Extensions
                     {
                         var curSavedViewPoint = (SavedViewpoint)matchItems[0];
 
-                        doc.IsolateSelection(elementGroup);
+                        doc.IsolateSelection(elementGroup, allElements);
                         doc.UpdateViewPoint(folder, curSavedViewPoint);
                     }
                     else
                     {
-                        doc.IsolateSelection(elementGroup);
+                        doc.IsolateSelection(elementGroup, allElements);
 
                         doc.CreateViewPoint(viewName);
 
@@ -308,6 +310,66 @@ namespace PM.Navisworks.ZoneTool.Extensions
             document.CurrentSelection.AddRange(elements);
 
             MessageBox.Show(elements.Count.ToString() + " elements has been updated.");
+        }
+
+        public static ModelItemCollection GetZonesFromSelection(this Document doc, ModelItemCollection selection, Configuration config)
+        {
+            var zones = new ModelItemCollection();
+
+            try
+            {
+                var search = new Search();
+
+                search.Selection.CopyFrom(selection);
+                search.PruneBelowMatch = config.ZonesOptions.PruneBelowMatch;
+                search.Locations = config.ZonesOptions.SearchLocations;
+
+                var condition = SearchCondition.HasPropertyByDisplayName(config.ZonesOptions.CodeCategory, config.ZonesOptions.CodeProperty);
+
+                search.SearchConditions.Add(condition);
+
+                var zonesCollection = search.FindAll(doc, true);
+
+                foreach (var zone in zonesCollection)
+                {
+                    if (zone.BoundingBox() != null)
+                    {
+                        zones.Add(zone);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message + "\n" + e.StackTrace);
+            }
+
+            return zones;
+        }
+
+        public static ModelItemCollection GetElementsFromSelection(this Document doc, ModelItemCollection selection, Configuration config)
+        {
+            var elements = new ModelItemCollection();
+
+            try
+            {
+                var search = new Search();
+
+                search.Selection.CopyFrom(selection);
+                search.PruneBelowMatch = config.ElementsOptions.PruneBelowMatch;
+                search.Locations = config.ElementsOptions.SearchLocations;
+
+                var condition = SearchCondition.HasCategoryByDisplayName("Item");
+
+                search.SearchConditions.Add(condition);
+
+                elements = search.FindAll(doc, true);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message + "\n" + e.StackTrace);
+            }
+
+            return elements;
         }
 
         //Others
@@ -500,6 +562,30 @@ namespace PM.Navisworks.ZoneTool.Extensions
             return (hidden);
         }
 
+        private static void IsolateSelection(this Document doc, ModelItemCollection elements, IEnumerable<ModelItem> allElements)
+        {
+            try
+            {
+                var curSel = doc.CurrentSelection;
+
+                curSel.Clear();
+
+                doc.Models.SetHidden(allElements, false);
+
+                curSel.AddRange(elements);
+
+                doc.State.InvertSelection();
+
+                doc.Models.SetHidden(curSel.SelectedItems, true);
+
+                doc.ActiveView.LookFromFrontRightTop();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message + "\n" + e.StackTrace);
+            }
+        }
+
         private static void IsolateSelection(this Document doc, ModelItemCollection elements)
         {
             var allElements = doc.Models.CreateCollectionFromRootItems().SelectMany(x => x.DescendantsAndSelf);
@@ -524,6 +610,13 @@ namespace PM.Navisworks.ZoneTool.Extensions
             {
                 MessageBox.Show(e.Message + "\n" + e.StackTrace);
             }
+        }
+
+        private static IEnumerable<ModelItem> GetAllElements(this Document doc)
+        {
+            var allElements = doc.Models.CreateCollectionFromRootItems().SelectMany(x => x.DescendantsAndSelf);
+
+            return allElements;
         }
 
         private static void CreateViewPoint(this Document doc, string name)
@@ -643,5 +736,15 @@ namespace PM.Navisworks.ZoneTool.Extensions
                 cItemCats.SetUserDefined(index, catDisplayName, catName, newCat);
             }
         }
+
+        //To DO
+
+        //private static IEnumerable<ModelItem> GetOnlyGeometry(this ModelItemCollection selection)
+        //{
+        //    var elements = selection.SelectMany(x => x.DescendantsAndSelf);
+        //    elements = selection.Where(x => x.HasGeometry);
+
+        //    return elements;
+        //}
     }
 }

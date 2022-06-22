@@ -3,6 +3,7 @@ using PM.Navisworks.ZoneTool.Commands;
 using PM.Navisworks.ZoneTool.Extensions;
 using PM.Navisworks.ZoneTool.Models;
 using PM.Navisworks.ZoneTool.Utilities;
+using System.Collections.Generic;
 using System.Windows;
 
 namespace PM.Navisworks.ZoneTool.ViewModels
@@ -13,8 +14,8 @@ namespace PM.Navisworks.ZoneTool.ViewModels
         {
             _document = document;
             Configuration = new Configuration();
-            Configuration.ZoneCategory = "Element";
-            Configuration.ZoneProperty = "ZoneNumber";
+            Configuration.ZonesOptions.CodeCategory = "Element";
+            Configuration.ZonesOptions.CodeProperty = "ZoneNumber";
 
             AddZoneDataCommand = new DelegateCommand(AddZoneData);
             SelectElementsCommand = new DelegateCommand(SelectElements);
@@ -86,8 +87,11 @@ namespace PM.Navisworks.ZoneTool.ViewModels
             {
                 _elements = new ModelItemCollection();
             }
+
+            var newElements = _document.GetElementsFromSelection(_document.CurrentSelection.SelectedItems, Configuration);
+
             _elements.Clear();
-            _elements.AddRange(_document.CurrentSelection.SelectedItems);
+            _elements.AddRange(newElements);
         }
 
         public DelegateCommand SelectZonesCommand { get; }
@@ -102,8 +106,11 @@ namespace PM.Navisworks.ZoneTool.ViewModels
             {
                 _zones = new ModelItemCollection();
             }
+
+            var newZones = _document.GetZonesFromSelection(_document.CurrentSelection.SelectedItems, Configuration);
+
             _zones.Clear();
-            _zones.AddRange(_document.CurrentSelection.SelectedItems);
+            _zones.AddRange(newZones);
         }
 
         public DelegateCommand GetElementsCommand { get; }
@@ -118,7 +125,6 @@ namespace PM.Navisworks.ZoneTool.ViewModels
             _document.CurrentSelection.AddRange(_elements);
 
             MessageBox.Show(_elements.Count.ToString() + " elements.");
-
         }
 
         public DelegateCommand GetZonesCommand { get; }
@@ -133,7 +139,6 @@ namespace PM.Navisworks.ZoneTool.ViewModels
             _document.CurrentSelection.AddRange(_zones);
 
             MessageBox.Show(_zones.Count.ToString() + " zones.");
-
         }
 
         public DelegateCommand CreateSelectionSetsCommand { get; }
