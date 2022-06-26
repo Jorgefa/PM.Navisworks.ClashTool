@@ -3,6 +3,8 @@ using PM.Navisworks.ZoneTool.Commands;
 using PM.Navisworks.ZoneTool.Extensions;
 using PM.Navisworks.ZoneTool.Models;
 using PM.Navisworks.ZoneTool.Utilities;
+using PM.Navisworks.ZoneTool.Utilities.ProgressBar;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 
@@ -16,6 +18,8 @@ namespace PM.Navisworks.ZoneTool.ViewModels
             Configuration = new Configuration();
             Configuration.ZonesOptions.CodeCategory = "Element";
             Configuration.ZonesOptions.CodeProperty = "ZoneNumber";
+
+            TestCommand = new DelegateCommand(Test);
 
             AddZoneDataCommand = new DelegateCommand(AddZoneData);
             SelectElementsCommand = new DelegateCommand(SelectElements);
@@ -117,28 +121,46 @@ namespace PM.Navisworks.ZoneTool.ViewModels
 
         private void GetElements()
         {
-            if (_elements == null)
+            try
             {
-                _elements = new ModelItemCollection();
+                if (_elements == null)
+                {
+                    _elements = new ModelItemCollection();
+                }
+                _document.CurrentSelection.Clear();
+                _document.CurrentSelection.AddRange(_elements);
             }
-            _document.CurrentSelection.Clear();
-            _document.CurrentSelection.AddRange(_elements);
-
-            MessageBox.Show(_elements.Count.ToString() + " elements.");
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message + "\n" + e.StackTrace);
+            }
+            finally
+            {
+                MessageBox.Show(_elements.Count.ToString() + " elements.");
+            }
         }
 
         public DelegateCommand GetZonesCommand { get; }
 
         private void GetZones()
         {
-            if (_zones == null)
+            try
             {
-                _zones = new ModelItemCollection();
+                if (_zones == null)
+                {
+                    _zones = new ModelItemCollection();
+                }
+                _document.CurrentSelection.Clear();
+                _document.CurrentSelection.AddRange(_zones);
             }
-            _document.CurrentSelection.Clear();
-            _document.CurrentSelection.AddRange(_zones);
-
-            MessageBox.Show(_zones.Count.ToString() + " zones.");
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message + "\n" + e.StackTrace);
+            }
+            finally
+            {
+                MessageBox.Show(_zones.Count.ToString() + " zones.");
+            }
         }
 
         public DelegateCommand CreateSelectionSetsCommand { get; }
@@ -171,6 +193,26 @@ namespace PM.Navisworks.ZoneTool.ViewModels
             }
 
             _document.CreateZoneSelectionSetsAndViews(_elements, _zones, _configuration);
+        }
+
+        public DelegateCommand TestCommand { get; }
+
+        private void Test()
+        {
+            if (_zones == null)
+            {
+                return;
+            }
+            if (_elements == null)
+            {
+                return;
+            }
+            if (_elements.Count == 0)
+            {
+                _elements = _document.CurrentSelection.SelectedItems;
+            }
+
+            _document.Test(_elements);
         }
     }
 }

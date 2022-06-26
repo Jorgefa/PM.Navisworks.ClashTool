@@ -20,5 +20,13 @@ namespace PM.Navisworks.ZoneTool.Models
             get { return _searchLocations; }
             set { SetProperty(ref _searchLocations, value); }
         }
+
+        private bool _selectOnlyGeometry = false;
+
+        public bool SelectOnlyGeometry
+        {
+            get { return _selectOnlyGeometry; }
+            set { SetProperty(ref _selectOnlyGeometry, value); }
+        }
     }
 }
