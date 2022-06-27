@@ -89,7 +89,7 @@ namespace PM.Navisworks.ZoneTool.Extensions
                 {
                     folder = new FolderItem() { DisplayName = folderName };
                     selSets.AddCopy(folder);
-                    folder = (FolderItem)selSetDoc.FindAllItemsByDisplayNameInAllLevels(folderName)[0];
+                    folder = (FolderItem)selSets.RootItem.FindAllItemsByDisplayNameInAllLevels(folderName)[0];
                 }
                 else if (matchFolders.Count == 1)
                 {
@@ -151,8 +151,6 @@ namespace PM.Navisworks.ZoneTool.Extensions
 
         public static void CreateZoneSelectionSetsAndViews(this Document doc, ModelItemCollection elements, ModelItemCollection zones, Configuration config)
         {
-            var selSets = doc.SelectionSets;
-
             var savedViewPoints = doc.SavedViewpoints;
 
             var folderName = config.FolderName;
@@ -161,33 +159,28 @@ namespace PM.Navisworks.ZoneTool.Extensions
 
             var viewPointDoc = doc.SavedViewpoints.RootItem;
 
-            var cDoc = ComApiBridge.State;
-
             try
             {
+                double current = 0;
+
+                double total;
+
+                Progress progress = Application.BeginProgress();
+
                 //Create sets
 
-                doc.CreateZoneSelectionSets(elements, zones, config);
+                var matchSetFolders = selSetDoc.FindAllItemsByDisplayNameInAllLevels(folderName);
 
-                FolderItem setsFolder = (FolderItem)selSetDoc.FindAllItemsByDisplayNameInAllLevels(folderName)[0];
+                FolderItem setsFolder;
 
-                var sets = setsFolder.Children;
-
-                //Check if views folder exists or create it if not.
-
-                FolderItem folder;
-
-                var matchFolders = viewPointDoc.FindAllItemsByDisplayNameInAllLevels(folderName);
-
-                if (matchFolders.Count == 0)
+                if (matchSetFolders.Count == 0)
                 {
-                    folder = new FolderItem() { DisplayName = folderName };
-                    savedViewPoints.AddCopy(folder);
-                    folder = (FolderItem)viewPointDoc.FindAllItemsByDisplayNameInAllLevels(folderName)[0];
+                    MessageBox.Show("There is no folder with that name. Please select a new folder name.");
+                    return;
                 }
-                else if (matchFolders.Count == 1)
+                else if (matchSetFolders.Count == 1)
                 {
-                    folder = (FolderItem)matchFolders[0];
+                    setsFolder = (FolderItem)matchSetFolders[0];
                 }
                 else
                 {
@@ -195,13 +188,31 @@ namespace PM.Navisworks.ZoneTool.Extensions
                     return;
                 }
 
-                double current = 0;
+                var sets = setsFolder.Children;
 
-                double total = sets.Count();
+                total = sets.Count;
 
-                Progress progress = Application.BeginProgress();
+                //Check if views folder exists or create it if not.
 
-                var allElements = doc.GetAllElements();
+                FolderItem folder;
+
+                var matchViewFolders = viewPointDoc.FindAllItemsByDisplayNameInAllLevels(folderName);
+
+                if (matchViewFolders.Count == 0)
+                {
+                    folder = new FolderItem() { DisplayName = folderName };
+                    savedViewPoints.AddCopy(folder);
+                    folder = (FolderItem)viewPointDoc.FindAllItemsByDisplayNameInAllLevels(folderName)[0];
+                }
+                else if (matchViewFolders.Count == 1)
+                {
+                    folder = (FolderItem)matchViewFolders[0];
+                }
+                else
+                {
+                    MessageBox.Show("There is already more than one folder with that name. Please select a new name or use a name of a unique existing folder that you want to update.");
+                    return;
+                }
 
                 foreach (SelectionSet set in sets)
                 {

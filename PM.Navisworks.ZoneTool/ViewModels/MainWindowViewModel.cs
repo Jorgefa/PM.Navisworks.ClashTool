@@ -92,8 +92,7 @@ namespace PM.Navisworks.ZoneTool.ViewModels
 
             var newElements = _document.GetElementsFromSelection(_document.CurrentSelection.SelectedItems, Configuration);
 
-            _elements.Clear();
-            _elements.AddRange(newElements);
+            _elements = newElements;
         }
 
         public DelegateCommand SelectZonesCommand { get; }
@@ -111,8 +110,7 @@ namespace PM.Navisworks.ZoneTool.ViewModels
 
             var newZones = _document.GetZonesFromSelection(_document.CurrentSelection.SelectedItems, Configuration);
 
-            _zones.Clear();
-            _zones.AddRange(newZones);
+            _zones = newZones;
         }
 
         public DelegateCommand GetElementsCommand { get; }

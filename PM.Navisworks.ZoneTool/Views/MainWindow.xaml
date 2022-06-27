@@ -174,7 +174,7 @@
                         Margin="0,9,0,3"
                         HorizontalAlignment="Left"
                         Style="{StaticResource TextBlockDefaultSecLight}"
-                        Text="Zone parameter category name" />
+                        Text="Zone parameter category name:" />
                     <TextBox
                         Margin="0,3,0,3"
                         hc:InfoElement.Placeholder="Zone Category"
@@ -183,7 +183,7 @@
                         Margin="0,9,0,3"
                         HorizontalAlignment="Left"
                         Style="{StaticResource TextBlockDefaultSecLight}"
-                        Text="Zone parameter property name" />
+                        Text="Zone parameter property name:" />
                     <TextBox
                         Margin="0,3,0,3"
                         hc:InfoElement.Placeholder="Zone Property"
@@ -241,14 +241,14 @@
                         <Button
                             Command="{Binding CreateSelectionSetsCommand}"
                             Content=" Sel. Sets"
-                            ToolTip="Create a new selection set for each zone."
+                            ToolTip="Create a new selection set for each zone in a folder."
                             ToolTipService.BetweenShowDelay="2000"
                             ToolTipService.InitialShowDelay="500"
                             ToolTipService.ShowDuration="6000" />
                         <Button
                             Command="{Binding CreateSelectionSetsAndViewsCommand}"
-                            Content="Sel. Sets + Viewpoints"
-                            ToolTip="Create a new selection set and one viewpoint for each zone."
+                            Content="Viewpoints from sets folder"
+                            ToolTip="Create/update viewpoints for each selection set in a folder."
                             ToolTipService.BetweenShowDelay="2000"
                             ToolTipService.InitialShowDelay="500"
                             ToolTipService.ShowDuration="6000" />
@@ -257,14 +257,14 @@
                         Margin="0,12,0,3"
                         HorizontalAlignment="Left"
                         Style="{StaticResource TextBlockDefaultSecLight}"
-                        Text="Selection Set Folder name" />
+                        Text="Selection Set Folder name:" />
                     <TextBox
                         Margin="0,2,0,10"
-                        hc:InfoElement.Placeholder="Folder Name"
+                        hc:InfoElement.Placeholder="Folder Name for selection sets and viewpoints creation."
                         Text="{Binding Configuration.FolderName}" />
                     <CheckBox
                         Margin="0,2,0,5"
-                        Content="Create only sets/views with elements inside"
+                        Content="Create only sets with elements inside"
                         IsChecked="{Binding Configuration.OnlyNotEmpty}"
                         ToolTip="Create only sets/views with elements inside."
                         ToolTipService.BetweenShowDelay="2000"
