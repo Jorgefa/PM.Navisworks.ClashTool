@@ -19,8 +19,6 @@ namespace PM.Navisworks.ZoneTool.ViewModels
             Configuration.ZonesOptions.CodeCategory = "Element";
             Configuration.ZonesOptions.CodeProperty = "ZoneNumber";
 
-            TestCommand = new DelegateCommand(Test);
-
             AddZoneDataCommand = new DelegateCommand(AddZoneData);
             SelectElementsCommand = new DelegateCommand(SelectElements);
             SelectZonesCommand = new DelegateCommand(SelectZones);
@@ -127,8 +125,7 @@ namespace PM.Navisworks.ZoneTool.ViewModels
                 {
                     _elements = new ModelItemCollection();
                 }
-                _document.CurrentSelection.Clear();
-                _document.CurrentSelection.AddRange(_elements);
+                _document.UpdateCurrentSelection(_elements);
             }
             catch (Exception e)
             {
@@ -150,8 +147,7 @@ namespace PM.Navisworks.ZoneTool.ViewModels
                 {
                     _zones = new ModelItemCollection();
                 }
-                _document.CurrentSelection.Clear();
-                _document.CurrentSelection.AddRange(_zones);
+                _document.UpdateCurrentSelection(_zones);
             }
             catch (Exception e)
             {
@@ -196,23 +192,5 @@ namespace PM.Navisworks.ZoneTool.ViewModels
         }
 
         public DelegateCommand TestCommand { get; }
-
-        private void Test()
-        {
-            if (_zones == null)
-            {
-                return;
-            }
-            if (_elements == null)
-            {
-                return;
-            }
-            if (_elements.Count == 0)
-            {
-                _elements = _document.CurrentSelection.SelectedItems;
-            }
-
-            _document.Test(_elements);
-        }
     }
 }

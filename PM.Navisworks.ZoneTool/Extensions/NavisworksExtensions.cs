@@ -119,7 +119,7 @@ namespace PM.Navisworks.ZoneTool.Extensions
                         if (elementsGroup.Count == 0 && config.OnlyNotEmpty)
                         {
                             //Check if it is possible remove previous sets. Not through item.Parent.Children.Remove(item);
-                            break;
+                            continue;
                         }
                         doc.UpdateSelectionSet(elementsGroup, (SelectionSet)item);
                     }
@@ -127,7 +127,7 @@ namespace PM.Navisworks.ZoneTool.Extensions
                     {
                         if (elementsGroup.Count == 0 && config.OnlyNotEmpty)
                         {
-                            break;
+                            continue;
                         }
                         doc.CreateSelectionSetInFolder(elementsGroup, setName, folder);
                     }
@@ -215,13 +215,13 @@ namespace PM.Navisworks.ZoneTool.Extensions
                     {
                         var curSavedViewPoint = (SavedViewpoint)matchItems[0];
 
-                        doc.IsolateSelection(elementGroup, allElements);
+                        doc.IsolateElements(elementGroup);
 
                         doc.UpdateViewPoint(folder, curSavedViewPoint);
                     }
                     else
                     {
-                        doc.IsolateSelection(elementGroup, allElements);
+                        doc.IsolateElements(elementGroup);
 
                         doc.CreateViewPoint(viewName);
 
@@ -372,6 +372,8 @@ namespace PM.Navisworks.ZoneTool.Extensions
 
             try
             {
+                Progress progress = Application.BeginProgress();
+
                 var search = new Search();
 
                 search.Selection.CopyFrom(selection);
@@ -388,10 +390,16 @@ namespace PM.Navisworks.ZoneTool.Extensions
                 {
                     elements = elements.GetOnlyGeometryItems();
                 }
+
+                progress.Update(1);
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.Message + "\n" + e.StackTrace);
+            }
+            finally
+            {
+                Application.EndProgress();
             }
 
             return elements;
@@ -545,98 +553,6 @@ namespace PM.Navisworks.ZoneTool.Extensions
             return zoneCollections;
         }
 
-        public static ModelItemCollection InvertElementCollection(this ModelItemCollection elements)
-        {
-            //Create hidden collection
-            ModelItemCollection hidden = new ModelItemCollection();
-
-            //create a store for the visible items
-            ModelItemCollection visible = new ModelItemCollection();
-
-            //Add all the items that are visible to the visible collection
-            foreach (ModelItem item in elements)
-            {
-                if (item.AncestorsAndSelf != null)
-                {
-                    visible.AddRange(item.AncestorsAndSelf);
-                }
-                if (item.Descendants != null)
-                {
-                    visible.AddRange(item.Descendants);
-                }
-            }
-
-            //mark as invisible all the siblings of the visible items
-            foreach (ModelItem toShow in visible)
-            {
-                if (toShow.Parent != null)
-                {
-                    hidden.AddRange(toShow.Parent.Children);
-                }
-            }
-
-            //remove the visible items from the collection
-            foreach (ModelItem toShow in visible)
-            {
-                hidden.Remove(toShow);
-            }
-
-            //hide the remaining items
-            Application.ActiveDocument.Models.SetHidden(hidden, true);
-
-            return (hidden);
-        }
-
-        public static void IsolateSelection(this Document doc, ModelItemCollection elements, IEnumerable<ModelItem> allElements)
-        {
-            try
-            {
-                var curSel = doc.CurrentSelection;
-
-                curSel.Clear();
-
-                doc.Models.SetHidden(allElements, false);
-
-                curSel.AddRange(elements);
-
-                doc.State.InvertSelection();
-
-                doc.Models.SetHidden(curSel.SelectedItems, true);
-
-                doc.ActiveView.LookFromFrontRightTop();
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message + "\n" + e.StackTrace);
-            }
-        }
-
-        private static void IsolateSelection(this Document doc, ModelItemCollection elements)
-        {
-            var allElements = doc.Models.CreateCollectionFromRootItems().SelectMany(x => x.DescendantsAndSelf);
-
-            try
-            {
-                var curSel = doc.CurrentSelection;
-
-                curSel.Clear();
-
-                doc.Models.SetHidden(allElements, false);
-
-                curSel.AddRange(elements);
-
-                doc.State.InvertSelection();
-
-                doc.Models.SetHidden(curSel.SelectedItems, true);
-
-                doc.ActiveView.LookFromFrontRightTop();
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message + "\n" + e.StackTrace);
-            }
-        }
-
         private static IEnumerable<ModelItem> GetAllElements(this Document doc)
         {
             var allElements = doc.Models.CreateCollectionFromRootItems().SelectMany(x => x.DescendantsAndSelf);
@@ -646,31 +562,45 @@ namespace PM.Navisworks.ZoneTool.Extensions
 
         private static void CreateViewPoint(this Document doc, string name)
         {
-            var state = ComApiBridge.State;
+            try
+            {
+                var state = ComApiBridge.State;
 
-            var cv = state.CurrentView.Copy();
+                var cv = state.CurrentView.Copy();
 
-            var vp = state.ObjectFactory(nwEObjectType.eObjectType_nwOpView);
-            var view = vp as InwOpView;
+                var vp = state.ObjectFactory(nwEObjectType.eObjectType_nwOpView);
+                var view = vp as InwOpView;
 
-            view.ApplyHideAttribs = true;
-            view.ApplyMaterialAttribs = true;
+                view.ApplyHideAttribs = true;
+                view.ApplyMaterialAttribs = true;
 
-            view.name = name;
-            view.anonview = (InwOpAnonView)cv;
+                view.name = name;
+                view.anonview = (InwOpAnonView)cv;
 
-            state.SavedViews().Add(vp);
+                state.SavedViews().Add(vp);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message + "\n" + e.StackTrace);
+            }
         }
 
         private static void UpdateViewPoint(this Document doc, FolderItem folder, SavedViewpoint savedViewpoint)
         {
-            var name = savedViewpoint.DisplayName;
+            try
+            {
+                var name = savedViewpoint.DisplayName;
 
-            var index = folder.Children.IndexOf(savedViewpoint);
+                var index = folder.Children.IndexOf(savedViewpoint);
 
-            var docSaveViews = doc.SavedViewpoints;
+                var docSaveViews = doc.SavedViewpoints;
 
-            docSaveViews.ReplaceFromCurrentView(savedViewpoint);
+                docSaveViews.ReplaceFromCurrentView(savedViewpoint);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message + "\n" + e.StackTrace);
+            }
         }
 
         public static void AddDataToItem(this ModelItem modelItem, InwOpState10 cDocument, string catDisplayName, string propDisplayName, string value)
@@ -784,34 +714,52 @@ namespace PM.Navisworks.ZoneTool.Extensions
             return elements;
         }
 
-        //To DO
-
-        public static void Test(this Document doc, ModelItemCollection elements)
+        public static void IsolateElements(this Document doc, ModelItemCollection elements)
         {
-            InwOpState10 myState = Autodesk.Navisworks.Api.ComApi.ComApiBridge.State;
+            try
+            {
+                InwOpState10 comDoc = ComApiBridge.State;
 
-            // Create a copy of current selection
-            //InwOpSelection2 myCurrentSelection = myState.CurrentSelection.Copy() as InwOpSelection2;
+                // Save elements as selection
+                InwOpSelection2 newSelection = ComApiBridge.ToInwOpSelection(elements) as InwOpSelection2;
 
-            InwOpSelection2 prevCurrentSelection = ComApiBridge.ToInwOpSelection(elements) as InwOpSelection2;
+                // Update current selection
+                comDoc.CurrentSelection = newSelection;
 
-            myState.CurrentSelection = prevCurrentSelection;
+                // Get current selection and invert
+                InwOpSelection2 currentSelection = comDoc.CurrentSelection.Copy() as InwOpSelection2;
 
-            InwOpSelection2 myCurrentSelection = myState.CurrentSelection.Copy() as InwOpSelection2;
+                currentSelection.Invert();
 
-            // Create a new empty selection
-            //InwOpSelection2 myRestOfModel = myState.ObjectFactory(nwEObjectType.eObjectType_nwOpSelection, null, null) as InwOpSelection2;
+                // Reset hidden and hide current selection
+                comDoc.HiddenItemsResetAll();
+                comDoc.set_SelectionHidden(currentSelection, true);
 
-            myCurrentSelection.Invert();
-            // Get the new selection to contain the entire model
-            //myRestOfModel.SelectAll();
-            // Subtract the current selection, so it contains the unselected part of model
-            //myRestOfModel.SubtractContents(myCurrentSelection);
+                // Zoom on the currently selected part of model
+                comDoc.ZoomInCurViewOnCurSel();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message + "\n" + e.StackTrace);
+            }
+        }
 
-            // Make the unselected part of model invisible
-            myState.set_SelectionHidden(myCurrentSelection, true);
-            // Zoom on the currently selected part of model
-            myState.ZoomInCurViewOnCurSel();
+        public static void UpdateCurrentSelection(this Document doc, ModelItemCollection elements)
+        {
+            try
+            {
+                InwOpState10 comDoc = ComApiBridge.State;
+
+                // Save elements as selection
+                InwOpSelection2 newSelection = ComApiBridge.ToInwOpSelection(elements) as InwOpSelection2;
+
+                // Update current selection
+                comDoc.CurrentSelection = newSelection;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message + "\n" + e.StackTrace);
+            }
         }
     }
 }

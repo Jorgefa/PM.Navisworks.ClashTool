@@ -239,13 +239,6 @@
                         VerticalAlignment="Bottom"
                         Orientation="Vertical">
                         <Button
-                            Command="{Binding TestCommand}"
-                            Content=" TEST"
-                            ToolTip="Create a new selection set for each zone."
-                            ToolTipService.BetweenShowDelay="2000"
-                            ToolTipService.InitialShowDelay="500"
-                            ToolTipService.ShowDuration="6000" />
-                        <Button
                             Command="{Binding CreateSelectionSetsCommand}"
                             Content=" Sel. Sets"
                             ToolTip="Create a new selection set for each zone."
